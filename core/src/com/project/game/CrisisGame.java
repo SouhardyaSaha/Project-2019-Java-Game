@@ -1,16 +1,19 @@
 package com.project.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.project.game.Screens.PlayScreen;
 
-public class CrisisGame extends com.badlogic.gdx.Game {
+public class CrisisGame extends Game {
 
     public static final int v_WIDTH = 1600;
     public static final int v_HEIGHT = 900;
+	public static final float PPM = 100;
+
 	public SpriteBatch batch;
 	
 	@Override
@@ -22,6 +25,7 @@ public class CrisisGame extends com.badlogic.gdx.Game {
 	@Override
 	public void render () {
 		super.render();
+		System.out.println(1/Gdx.graphics.getDeltaTime());
 	}
 	
 	@Override

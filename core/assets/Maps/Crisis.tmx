@@ -296,7 +296,7 @@
  <objectgroup id="7" name="Barrel">
   <object id="7" x="2833" y="764" width="164" height="226"/>
  </objectgroup>
- <objectgroup id="11" name="Door">
+ <objectgroup id="11" name="Door" opacity="0.45">
   <object id="21" x="6250.67" y="567" width="228.667" height="406"/>
  </objectgroup>
 </map>
