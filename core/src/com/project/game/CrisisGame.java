@@ -12,7 +12,7 @@ public class CrisisGame extends Game {
 
     public static final int v_WIDTH = 1600;
     public static final int v_HEIGHT = 900;
-	public static final float PPM = 100;
+	public static final float PPM = 200;
 
 	public SpriteBatch batch;
 	

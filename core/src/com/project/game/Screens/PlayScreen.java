@@ -18,6 +18,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.project.game.CrisisGame;
 import com.project.game.Scenes.Hud;
 import com.project.game.Sprites.MainPlayer;
+import com.project.game.Tools.Box2dWorldCreator;
 
 
 public class PlayScreen implements Screen {
@@ -68,94 +69,7 @@ public class PlayScreen implements Screen {
         //allow the debug lines of box2d
         b2dr = new Box2DDebugRenderer();
 
-        BodyDef bdef = new BodyDef();
-        PolygonShape shape = new PolygonShape();
-        FixtureDef fdef = new FixtureDef();
-        Body body;
-
-        //creating ground body fixtures
-        for (MapObject object : map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)){
-            Rectangle rect = ((RectangleMapObject) object).getRectangle();
-
-            bdef.type = BodyDef.BodyType.StaticBody;
-            bdef.position.set((rect.getX() + rect.getWidth() / 2) / CrisisGame.PPM, (rect.getY() + rect.getHeight() / 2) / CrisisGame.PPM);
-
-            body = world.createBody(bdef);
-
-            shape.setAsBox(rect.getWidth() / 2 / CrisisGame.PPM,  rect.getHeight() / 2 / CrisisGame.PPM);
-            fdef.shape = shape;
-            body.createFixture(fdef);
-        }
-
-        //creating barrel bodies/fixtures
-        for (MapObject object : map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)){
-            Rectangle rect = ((RectangleMapObject) object).getRectangle();
-
-            bdef.type = BodyDef.BodyType.StaticBody;
-            bdef.position.set((rect.getX() + rect.getWidth() / 2)/ CrisisGame.PPM, (rect.getY() + rect.getHeight() / 2)/ CrisisGame.PPM);
-
-            body = world.createBody(bdef);
-
-            shape.setAsBox(rect.getWidth() / 2 / CrisisGame.PPM,  rect.getHeight() / 2 / CrisisGame.PPM);
-            fdef.shape = shape;
-            body.createFixture(fdef);
-        }
-
-        //creating spike bodies/fixtures
-        for (MapObject object : map.getLayers().get(2).getObjects().getByType(RectangleMapObject.class)){
-            Rectangle rect = ((RectangleMapObject) object).getRectangle();
-
-            bdef.type = BodyDef.BodyType.StaticBody;
-            bdef.position.set((rect.getX() + rect.getWidth() / 2)/ CrisisGame.PPM, (rect.getY() + rect.getHeight() / 2)/ CrisisGame.PPM);
-
-            body = world.createBody(bdef);
-
-            shape.setAsBox(rect.getWidth() / 2 / CrisisGame.PPM,  rect.getHeight() / 2 / CrisisGame.PPM);
-            fdef.shape = shape;
-            body.createFixture(fdef);
-        }
-
-        //creating box bodies/fixtures
-        for (MapObject object : map.getLayers().get(3).getObjects().getByType(RectangleMapObject.class)){
-            Rectangle rect = ((RectangleMapObject) object).getRectangle();
-
-            bdef.type = BodyDef.BodyType.StaticBody;
-            bdef.position.set((rect.getX() + rect.getWidth() / 2)/ CrisisGame.PPM, (rect.getY() + rect.getHeight() / 2)/ CrisisGame.PPM);
-
-            body = world.createBody(bdef);
-
-            shape.setAsBox(rect.getWidth() / 2 / CrisisGame.PPM,  rect.getHeight() / 2 / CrisisGame.PPM);
-            fdef.shape = shape;
-            body.createFixture(fdef);
-        }
-
-        //creating acid bodies/fixtures
-        for (MapObject object : map.getLayers().get(1).getObjects().getByType(RectangleMapObject.class)){
-            Rectangle rect = ((RectangleMapObject) object).getRectangle();
-
-            bdef.type = BodyDef.BodyType.StaticBody;
-            bdef.position.set((rect.getX() + rect.getWidth() / 2)/ CrisisGame.PPM, (rect.getY() + rect.getHeight() / 2)/ CrisisGame.PPM);
-
-            body = world.createBody(bdef);
-
-            shape.setAsBox(rect.getWidth() / 2 / CrisisGame.PPM,  rect.getHeight() / 2 / CrisisGame.PPM);
-            fdef.shape = shape;
-            body.createFixture(fdef);
-        }
-
-        //creating door bodies/fixtures
-        for (MapObject object : map.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)){
-            Rectangle rect = ((RectangleMapObject) object).getRectangle();
-
-            bdef.type = BodyDef.BodyType.StaticBody;
-            bdef.position.set((rect.getX() + rect.getWidth() / 2)/ CrisisGame.PPM, (rect.getY() + rect.getHeight() / 2)/ CrisisGame.PPM);
-
-            body = world.createBody(bdef);
-
-            shape.setAsBox(rect.getWidth() / 2 / CrisisGame.PPM,  rect.getHeight() / 2 / CrisisGame.PPM);
-            fdef.shape = shape;
-            body.createFixture(fdef);
-        }
+        new Box2dWorldCreator(world,map);
 
         mainPlayer = new MainPlayer(world);
 
@@ -219,8 +133,8 @@ public class PlayScreen implements Screen {
         b2dr.render(world, gameCam.combined);
 
         //to draw what HUD camera sees
-//        game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
-//        hud.stage.draw();
+        game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
+        hud.stage.draw();
 
     }
 
@@ -247,6 +161,10 @@ public class PlayScreen implements Screen {
 
     @Override
     public void dispose() {
+        map.dispose();
+        renderer.dispose();
+        world.dispose();
+        b2dr.dispose();
 
     }
 }
