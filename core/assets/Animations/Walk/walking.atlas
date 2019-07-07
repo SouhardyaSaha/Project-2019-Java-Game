@@ -1,0 +1,423 @@
+
+walking.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-walk0
+  rotate: false
+  xy: 2, 2
+  size: 708, 812
+  orig: 708, 812
+  offset: 0, 0
+  index: -1
+robot4-walk32
+  rotate: false
+  xy: 2, 2
+  size: 708, 812
+  orig: 708, 812
+  offset: 0, 0
+  index: -1
+
+walking2.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-walk1
+  rotate: false
+  xy: 2, 2
+  size: 708, 812
+  orig: 708, 812
+  offset: 0, 0
+  index: -1
+
+walking3.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-walk2
+  rotate: false
+  xy: 2, 2
+  size: 708, 812
+  orig: 708, 812
+  offset: 0, 0
+  index: -1
+
+walking4.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-walk3
+  rotate: false
+  xy: 2, 2
+  size: 708, 812
+  orig: 708, 812
+  offset: 0, 0
+  index: -1
+
+walking5.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-walk4
+  rotate: false
+  xy: 2, 2
+  size: 708, 812
+  orig: 708, 812
+  offset: 0, 0
+  index: -1
+
+walking6.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-walk5
+  rotate: false
+  xy: 2, 2
+  size: 708, 812
+  orig: 708, 812
+  offset: 0, 0
+  index: -1
+
+walking7.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-walk6
+  rotate: false
+  xy: 2, 2
+  size: 708, 812
+  orig: 708, 812
+  offset: 0, 0
+  index: -1
+
+walking8.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-walk7
+  rotate: false
+  xy: 2, 2
+  size: 708, 812
+  orig: 708, 812
+  offset: 0, 0
+  index: -1
+
+walking9.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-walk8
+  rotate: false
+  xy: 2, 2
+  size: 708, 812
+  orig: 708, 812
+  offset: 0, 0
+  index: -1
+
+walking10.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-walk9
+  rotate: false
+  xy: 2, 2
+  size: 708, 812
+  orig: 708, 812
+  offset: 0, 0
+  index: -1
+
+walking11.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-walk10
+  rotate: false
+  xy: 2, 2
+  size: 708, 812
+  orig: 708, 812
+  offset: 0, 0
+  index: -1
+
+walking12.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-walk11
+  rotate: false
+  xy: 2, 2
+  size: 708, 812
+  orig: 708, 812
+  offset: 0, 0
+  index: -1
+
+walking13.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-walk12
+  rotate: false
+  xy: 2, 2
+  size: 708, 812
+  orig: 708, 812
+  offset: 0, 0
+  index: -1
+
+walking14.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-walk13
+  rotate: false
+  xy: 2, 2
+  size: 708, 812
+  orig: 708, 812
+  offset: 0, 0
+  index: -1
+
+walking15.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-walk14
+  rotate: false
+  xy: 2, 2
+  size: 708, 812
+  orig: 708, 812
+  offset: 0, 0
+  index: -1
+
+walking16.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-walk15
+  rotate: false
+  xy: 2, 2
+  size: 708, 812
+  orig: 708, 812
+  offset: 0, 0
+  index: -1
+
+walking17.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-walk16
+  rotate: false
+  xy: 2, 2
+  size: 708, 812
+  orig: 708, 812
+  offset: 0, 0
+  index: -1
+
+walking18.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-walk17
+  rotate: false
+  xy: 2, 2
+  size: 708, 812
+  orig: 708, 812
+  offset: 0, 0
+  index: -1
+
+walking19.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-walk18
+  rotate: false
+  xy: 2, 2
+  size: 708, 812
+  orig: 708, 812
+  offset: 0, 0
+  index: -1
+
+walking20.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-walk19
+  rotate: false
+  xy: 2, 2
+  size: 708, 812
+  orig: 708, 812
+  offset: 0, 0
+  index: -1
+
+walking21.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-walk20
+  rotate: false
+  xy: 2, 2
+  size: 708, 812
+  orig: 708, 812
+  offset: 0, 0
+  index: -1
+
+walking22.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-walk21
+  rotate: false
+  xy: 2, 2
+  size: 708, 812
+  orig: 708, 812
+  offset: 0, 0
+  index: -1
+
+walking23.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-walk22
+  rotate: false
+  xy: 2, 2
+  size: 708, 812
+  orig: 708, 812
+  offset: 0, 0
+  index: -1
+
+walking24.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-walk23
+  rotate: false
+  xy: 2, 2
+  size: 708, 812
+  orig: 708, 812
+  offset: 0, 0
+  index: -1
+
+walking25.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-walk24
+  rotate: false
+  xy: 2, 2
+  size: 708, 812
+  orig: 708, 812
+  offset: 0, 0
+  index: -1
+
+walking26.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-walk25
+  rotate: false
+  xy: 2, 2
+  size: 708, 812
+  orig: 708, 812
+  offset: 0, 0
+  index: -1
+
+walking27.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-walk26
+  rotate: false
+  xy: 2, 2
+  size: 708, 812
+  orig: 708, 812
+  offset: 0, 0
+  index: -1
+
+walking28.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-walk27
+  rotate: false
+  xy: 2, 2
+  size: 708, 812
+  orig: 708, 812
+  offset: 0, 0
+  index: -1
+
+walking29.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-walk28
+  rotate: false
+  xy: 2, 2
+  size: 708, 812
+  orig: 708, 812
+  offset: 0, 0
+  index: -1
+
+walking30.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-walk29
+  rotate: false
+  xy: 2, 2
+  size: 708, 812
+  orig: 708, 812
+  offset: 0, 0
+  index: -1
+
+walking31.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-walk30
+  rotate: false
+  xy: 2, 2
+  size: 708, 812
+  orig: 708, 812
+  offset: 0, 0
+  index: -1
+
+walking32.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-walk31
+  rotate: false
+  xy: 2, 2
+  size: 708, 812
+  orig: 708, 812
+  offset: 0, 0
+  index: -1
