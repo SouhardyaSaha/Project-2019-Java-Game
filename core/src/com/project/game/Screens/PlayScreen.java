@@ -3,8 +3,9 @@ package com.project.game.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -21,6 +22,8 @@ import com.project.game.Tools.Box2dWorldCreator;
 
 public class PlayScreen implements Screen {
 
+    private Texture backgroundImage;
+
     ///Game Reference
     private CrisisGame game;
 
@@ -33,8 +36,8 @@ public class PlayScreen implements Screen {
     private Hud hud;
 
     ///Tiled Map Variables
-    private TmxMapLoader mapLoader;
     private TiledMap map;
+    private TmxMapLoader mapLoader;
     private OrthogonalTiledMapRenderer renderer;
 
     ///Box 2d variables
@@ -57,6 +60,8 @@ public class PlayScreen implements Screen {
 
         ///HUD for scores/timers/level info
         hud = new Hud(game.batch);
+
+        backgroundImage = new Texture("BG apocalyptic 3.png");
 
         //Load map and setup map renderer
         mapLoader = new TmxMapLoader();
@@ -91,7 +96,7 @@ public class PlayScreen implements Screen {
     public void handleInput(float dt){
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.UP)){
-            mainPlayer.b2body.applyLinearImpulse(new Vector2(0, 9f), mainPlayer.b2body.getWorldCenter(),true);
+            mainPlayer.b2body.applyLinearImpulse(new Vector2(0, 8f), mainPlayer.b2body.getWorldCenter(),true);
 //            gameCam.position.y += 100 * dt;
         }
 
@@ -104,7 +109,7 @@ public class PlayScreen implements Screen {
 //            gameCam.position.x -= 100 * dt;
         }
         if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
-            mainPlayer.b2body.applyLinearImpulse(new Vector2(0, 4f), mainPlayer.b2body.getWorldCenter(),true);
+            mainPlayer.b2body.applyLinearImpulse(new Vector2(0, -4f), mainPlayer.b2body.getWorldCenter(),true);
 //            gameCam.position.y -= 100 * dt;
         }
 
@@ -134,15 +139,21 @@ public class PlayScreen implements Screen {
         update(delta);
 
         ///clear the game screen with black
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        //Gdx.gl.glClearColor(0, 0, 0, 1);
+        //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        ///render background
+        game.batch.begin();
+        game.batch.draw(backgroundImage, 0, 0, 1600, 1100);
+        game.batch.end();
 
         //render gameMap
         renderer.render();
 
         //renderer box2DDebugelines
-        b2dr.render(world, gameCam.combined);
+//        b2dr.render(world, gameCam.combined);
 
+        ///
         game.batch.setProjectionMatrix(gameCam.combined);
         game.batch.begin();
         mainPlayer.draw(game.batch);
@@ -177,8 +188,8 @@ public class PlayScreen implements Screen {
 
     @Override
     public void dispose() {
-        map.dispose();
-        renderer.dispose();
+        //map.dispose();
+        //renderer.dispose();
         world.dispose();
         b2dr.dispose();
         hud.dispose();

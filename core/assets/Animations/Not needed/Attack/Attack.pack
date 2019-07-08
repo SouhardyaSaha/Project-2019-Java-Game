@@ -1,0 +1,199 @@
+
+Attack.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-attack0
+  rotate: false
+  xy: 1, 1
+  size: 919, 821
+  orig: 919, 821
+  offset: 0, 0
+  index: -1
+robot4-attack16
+  rotate: false
+  xy: 1, 1
+  size: 919, 821
+  orig: 919, 821
+  offset: 0, 0
+  index: -1
+
+Attack2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-attack1
+  rotate: false
+  xy: 1, 1
+  size: 919, 821
+  orig: 919, 821
+  offset: 0, 0
+  index: -1
+
+Attack3.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-attack10
+  rotate: false
+  xy: 1, 1
+  size: 919, 821
+  orig: 919, 821
+  offset: 0, 0
+  index: -1
+
+Attack4.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-attack11
+  rotate: false
+  xy: 1, 1
+  size: 919, 821
+  orig: 919, 821
+  offset: 0, 0
+  index: -1
+
+Attack5.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-attack12
+  rotate: false
+  xy: 1, 1
+  size: 919, 821
+  orig: 919, 821
+  offset: 0, 0
+  index: -1
+
+Attack6.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-attack13
+  rotate: false
+  xy: 1, 1
+  size: 919, 821
+  orig: 919, 821
+  offset: 0, 0
+  index: -1
+
+Attack7.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-attack14
+  rotate: false
+  xy: 1, 1
+  size: 919, 821
+  orig: 919, 821
+  offset: 0, 0
+  index: -1
+
+Attack8.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-attack15
+  rotate: false
+  xy: 1, 1
+  size: 919, 821
+  orig: 919, 821
+  offset: 0, 0
+  index: -1
+
+Attack9.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-attack2
+  rotate: false
+  xy: 1, 1
+  size: 919, 821
+  orig: 919, 821
+  offset: 0, 0
+  index: -1
+
+Attack10.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-attack3
+  rotate: false
+  xy: 1, 1
+  size: 919, 821
+  orig: 919, 821
+  offset: 0, 0
+  index: -1
+
+Attack11.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-attack4
+  rotate: false
+  xy: 1, 1
+  size: 919, 821
+  orig: 919, 821
+  offset: 0, 0
+  index: -1
+
+Attack12.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-attack5
+  rotate: false
+  xy: 1, 1
+  size: 919, 821
+  orig: 919, 821
+  offset: 0, 0
+  index: -1
+
+Attack13.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-attack6
+  rotate: false
+  xy: 1, 1
+  size: 919, 821
+  orig: 919, 821
+  offset: 0, 0
+  index: -1
+
+Attack14.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-attack7
+  rotate: false
+  xy: 1, 1
+  size: 919, 821
+  orig: 919, 821
+  offset: 0, 0
+  index: -1
+
+Attack15.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-attack8
+  rotate: false
+  xy: 1, 1
+  size: 919, 821
+  orig: 919, 821
+  offset: 0, 0
+  index: -1
+
+Attack16.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-attack9
+  rotate: false
+  xy: 1, 1
+  size: 919, 821
+  orig: 919, 821
+  offset: 0, 0
+  index: -1

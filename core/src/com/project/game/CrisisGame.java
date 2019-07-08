@@ -11,7 +11,7 @@ import com.project.game.Screens.PlayScreen;
 public class CrisisGame extends Game {
 
     public static final int v_WIDTH = 1600;
-    public static final int v_HEIGHT = 900;
+    public static final int v_HEIGHT = 1100;
 	public static final float PPM = 200;
 
 	public SpriteBatch batch;
@@ -25,7 +25,7 @@ public class CrisisGame extends Game {
 	@Override
 	public void render () {
 		super.render();
-		System.out.println(1/Gdx.graphics.getDeltaTime());
+//		System.out.println(1/Gdx.graphics.getDeltaTime());
 	}
 	
 	@Override
