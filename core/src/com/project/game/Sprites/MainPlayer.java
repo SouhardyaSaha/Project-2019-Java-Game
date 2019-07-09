@@ -22,7 +22,7 @@ public class MainPlayer extends Sprite {
     private Animation playerRun;
     private Animation playerJump;
     private float stateTimer;
-    private boolean walkingLeft;
+    public boolean walkingLeft;
 
     public MainPlayer(World world, PlayScreen screen){
         super(screen.getAtlas().findRegion("robot4-walk8"));
@@ -34,7 +34,7 @@ public class MainPlayer extends Sprite {
         walkingLeft = true;
 
         Array<TextureRegion> frames = new Array<TextureRegion>();
-        for(int i=2; i<=32; i++){
+        for(int i = 1; i<=32; i++){
             frames.add(new TextureRegion(new Texture("Animations/Walk/walking" + i + ".png")));
         }
         playerRun = new Animation(1f/32f, frames);
@@ -104,7 +104,7 @@ public class MainPlayer extends Sprite {
 
     public void defineMainPlayer(){
         BodyDef bdef = new BodyDef();
-        bdef.position.set(260/ CrisisGame.PPM,809/ CrisisGame.PPM);
+        bdef.position.set(320/ CrisisGame.PPM,700/ CrisisGame.PPM);
         bdef.type = BodyDef.BodyType.DynamicBody;
         b2body = world.createBody(bdef);
 

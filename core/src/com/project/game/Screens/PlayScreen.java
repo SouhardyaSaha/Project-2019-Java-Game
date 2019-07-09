@@ -12,16 +12,27 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.project.game.CrisisGame;
 import com.project.game.Scenes.Hud;
 import com.project.game.Sprites.MainPlayer;
 import com.project.game.Tools.Box2dWorldCreator;
+import com.project.game.Tools.Bullet;
+import com.project.game.Tools.worldContactListener;
+import com.badlogic.gdx.graphics.GL20;
+
+import java.nio.channels.NonReadableChannelException;
+import java.util.ArrayList;
 
 
 public class PlayScreen implements Screen {
 
+    ArrayList<Bullet> bullets;
+
+    // backGround
     private Texture backgroundImage;
 
     ///Game Reference
@@ -48,6 +59,7 @@ public class PlayScreen implements Screen {
     private MainPlayer mainPlayer;
 
     public  PlayScreen(CrisisGame game){
+        ///for animation
         atlas = new TextureAtlas("Animation/Main player/Walk/Main Player Walk.pack");
 
         this.game = game;
@@ -56,7 +68,7 @@ public class PlayScreen implements Screen {
         gameCam = new OrthographicCamera();
 
         ///creating viewport to maintain ratio
-        gamePort = new FitViewport(CrisisGame.v_WIDTH / CrisisGame.PPM, CrisisGame.v_HEIGHT /  CrisisGame.PPM , gameCam);
+        gamePort = new StretchViewport(CrisisGame.v_WIDTH / CrisisGame.PPM, CrisisGame.v_HEIGHT /  CrisisGame.PPM , gameCam);
 
         ///HUD for scores/timers/level info
         hud = new Hud(game.batch);
@@ -69,7 +81,7 @@ public class PlayScreen implements Screen {
         renderer = new OrthogonalTiledMapRenderer(map, 1 / CrisisGame.PPM);
 
         //set the gamecam to start of the map
-        gameCam.position.set(gamePort.getWorldWidth() / 2 , gamePort.getWorldHeight() / 2 , 0);
+        gameCam.position.set(gamePort.getWorldWidth()  , gamePort.getWorldHeight() / 1.5f , 0);
 
         //Box2d World setting the gravity of
         world = new World(new Vector2(0,-15), true);
@@ -79,7 +91,13 @@ public class PlayScreen implements Screen {
 
         new Box2dWorldCreator(world,map);
 
+        //creating main character
         mainPlayer = new MainPlayer(world, this);
+
+        ///creating bullets
+        bullets = new ArrayList<Bullet>();
+
+        world.setContactListener(new worldContactListener());
 
 
     }
@@ -94,6 +112,14 @@ public class PlayScreen implements Screen {
     }
 
     public void handleInput(float dt){
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.CONTROL_LEFT)){
+            float bulletX = mainPlayer.b2body.getPosition().x ;
+            float bulletY = mainPlayer.b2body.getPosition().y;
+            bullets.add(new Bullet(bulletX, bulletY, mainPlayer.walkingLeft));
+            System.out.println("Shoot");
+
+        }
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.UP)){
             mainPlayer.b2body.applyLinearImpulse(new Vector2(0, 8f), mainPlayer.b2body.getWorldCenter(),true);
@@ -122,14 +148,26 @@ public class PlayScreen implements Screen {
 
         world.step(1/60f, 6, 2);
 
+        ///main player update
         mainPlayer.update(dt);
+
+        ///bullets update
+        ArrayList<Bullet> bulletToRemove = new ArrayList<Bullet>();
+        for(Bullet bullet : bullets){
+            bullet.update(dt);
+            if(bullet.remove){
+                bulletToRemove.add(bullet);
+            }
+        }
+        bullets.removeAll(bulletToRemove);
 
         ///attach gameCam with players x co ordinate
         gameCam.position.x = mainPlayer.b2body.getPosition().x;
-        gameCam.position.y = mainPlayer.b2body.getPosition().y;
+//        gameCam.position.y = mainPlayer.b2body.getPosition().y;
 
         //update the gamecam with correct coordinates after changes
         gameCam.update();
+
         //render what the only gamecam sees
         renderer.setView(gameCam);
     }
@@ -138,9 +176,11 @@ public class PlayScreen implements Screen {
     public void render(float delta) {
         update(delta);
 
+        ///ajaira
+
         ///clear the game screen with black
-        //Gdx.gl.glClearColor(0, 0, 0, 1);
-        //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         ///render background
         game.batch.begin();
@@ -151,12 +191,19 @@ public class PlayScreen implements Screen {
         renderer.render();
 
         //renderer box2DDebugelines
-//        b2dr.render(world, gameCam.combined);
+       // b2dr.render(world, gameCam.combined);
 
         ///
         game.batch.setProjectionMatrix(gameCam.combined);
         game.batch.begin();
         mainPlayer.draw(game.batch);
+        game.batch.end();
+
+        ///bullet rendering
+        game.batch.begin();
+        for (Bullet bullet : bullets){
+            bullet.render(game.batch);
+        }
         game.batch.end();
 
         //to draw what HUD camera sees
@@ -188,8 +235,8 @@ public class PlayScreen implements Screen {
 
     @Override
     public void dispose() {
-        //map.dispose();
-        //renderer.dispose();
+        map.dispose();
+        renderer.dispose();
         world.dispose();
         b2dr.dispose();
         hud.dispose();
