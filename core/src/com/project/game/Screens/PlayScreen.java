@@ -118,7 +118,6 @@ public class PlayScreen implements Screen {
             float bulletY = mainPlayer.b2body.getPosition().y;
             bullets.add(new Bullet(bulletX, bulletY, mainPlayer.walkingLeft));
             System.out.println("Shoot");
-
         }
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.UP)){

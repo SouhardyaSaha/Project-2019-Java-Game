@@ -1,5 +1,7 @@
 package com.project.game.Sprites;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -11,7 +13,7 @@ import com.project.game.Screens.PlayScreen;
 
 public class MainPlayer extends Sprite {
 
-    public enum State { Falling, JUMPING, STANDING, RUNNING};
+    public enum State { Falling, JUMPING, STANDING, RUNNING, Shooting};
     public State currentState;
     public State previousState;
 
@@ -21,8 +23,10 @@ public class MainPlayer extends Sprite {
     private TextureRegion playerStand;
     private Animation playerRun;
     private Animation playerJump;
+    private Animation playerShooting;
     private float stateTimer;
     public boolean walkingLeft;
+    public boolean shoot;
 
     public MainPlayer(World world, PlayScreen screen){
         super(screen.getAtlas().findRegion("robot4-walk8"));
@@ -32,6 +36,7 @@ public class MainPlayer extends Sprite {
         previousState = State.STANDING;
         stateTimer = 0;
         walkingLeft = true;
+        shoot = false;
 
         Array<TextureRegion> frames = new Array<TextureRegion>();
         for(int i = 1; i<=32; i++){
@@ -46,7 +51,14 @@ public class MainPlayer extends Sprite {
         playerJump = new Animation(1f/30f, frames);
         frames.clear();
 
-        playerStand = new TextureRegion(getTexture(), 0, 0 , 1024, 1024);
+        for (int i = 1; i<=16; i++){
+            frames.add(new TextureRegion(new Texture("Animations/Shooting/Shooting" + i + ".png")));
+        }
+        playerShooting = new Animation(1f/16f, frames);
+
+        frames.clear();
+
+        playerStand = new TextureRegion(new Texture("Animations/Shooting/Shooting1.png"));
 
         defineMainPlayer();
         setBounds(0, 0, 500 / CrisisGame.PPM, 500 / CrisisGame.PPM);
@@ -56,6 +68,8 @@ public class MainPlayer extends Sprite {
     public  void update(float dt){
         setPosition(b2body.getPosition().x - getWidth() / 2.2f, b2body.getPosition().y - getHeight() / 1.8f );
         setRegion(getFrame(dt));
+        if (Gdx.input.isKeyJustPressed(Input.Keys.CONTROL_LEFT)) shoot = true;
+        if (playerShooting.isAnimationFinished(stateTimer)) shoot = false;
     }
 
     public TextureRegion getFrame(float dt){
@@ -70,8 +84,15 @@ public class MainPlayer extends Sprite {
             case RUNNING:
                 Region = (TextureRegion) playerRun.getKeyFrame(stateTimer, true);
                 break;
-            case Falling:
-            case STANDING:
+//            case Falling:
+//                Region = playerStand;
+//                break;
+//            case STANDING:
+//                Region = playerStand;
+//                break;
+            case Shooting:
+                Region = (TextureRegion) playerShooting.getKeyFrame(stateTimer, false);
+                break;
             default:
                 Region = playerStand;
                 break;
@@ -86,6 +107,11 @@ public class MainPlayer extends Sprite {
             walkingLeft = true;
         }
 
+        if(Gdx.input.isKeyJustPressed(Input.Keys.CONTROL_LEFT)) {
+            shoot = true;
+        }
+//        else shoot = false;
+
         stateTimer = currentState == previousState ? stateTimer + dt : 0;
         previousState = currentState;
         return Region;
@@ -98,6 +124,8 @@ public class MainPlayer extends Sprite {
             return State.Falling;
         else if (b2body.getLinearVelocity().x != 0)
             return State.RUNNING;
+        else if (shoot)
+            return State.Shooting;
         else
             return State.STANDING;
     }

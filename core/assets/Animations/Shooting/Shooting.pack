@@ -1,0 +1,199 @@
+
+Shooting.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-attack0
+  rotate: false
+  xy: 1, 1
+  size: 919, 821
+  orig: 919, 821
+  offset: 0, 0
+  index: -1
+robot4-attack16
+  rotate: false
+  xy: 1, 1
+  size: 919, 821
+  orig: 919, 821
+  offset: 0, 0
+  index: -1
+
+Shooting2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-attack1
+  rotate: false
+  xy: 1, 1
+  size: 919, 821
+  orig: 919, 821
+  offset: 0, 0
+  index: -1
+
+Shooting3.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-attack10
+  rotate: false
+  xy: 1, 1
+  size: 919, 821
+  orig: 919, 821
+  offset: 0, 0
+  index: -1
+
+Shooting4.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-attack11
+  rotate: false
+  xy: 1, 1
+  size: 919, 821
+  orig: 919, 821
+  offset: 0, 0
+  index: -1
+
+Shooting5.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-attack12
+  rotate: false
+  xy: 1, 1
+  size: 919, 821
+  orig: 919, 821
+  offset: 0, 0
+  index: -1
+
+Shooting6.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-attack13
+  rotate: false
+  xy: 1, 1
+  size: 919, 821
+  orig: 919, 821
+  offset: 0, 0
+  index: -1
+
+Shooting7.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-attack14
+  rotate: false
+  xy: 1, 1
+  size: 919, 821
+  orig: 919, 821
+  offset: 0, 0
+  index: -1
+
+Shooting8.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-attack15
+  rotate: false
+  xy: 1, 1
+  size: 919, 821
+  orig: 919, 821
+  offset: 0, 0
+  index: -1
+
+Shooting9.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-attack2
+  rotate: false
+  xy: 1, 1
+  size: 919, 821
+  orig: 919, 821
+  offset: 0, 0
+  index: -1
+
+Shooting10.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-attack3
+  rotate: false
+  xy: 1, 1
+  size: 919, 821
+  orig: 919, 821
+  offset: 0, 0
+  index: -1
+
+Shooting11.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-attack4
+  rotate: false
+  xy: 1, 1
+  size: 919, 821
+  orig: 919, 821
+  offset: 0, 0
+  index: -1
+
+Shooting12.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-attack5
+  rotate: false
+  xy: 1, 1
+  size: 919, 821
+  orig: 919, 821
+  offset: 0, 0
+  index: -1
+
+Shooting13.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-attack6
+  rotate: false
+  xy: 1, 1
+  size: 919, 821
+  orig: 919, 821
+  offset: 0, 0
+  index: -1
+
+Shooting14.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-attack7
+  rotate: false
+  xy: 1, 1
+  size: 919, 821
+  orig: 919, 821
+  offset: 0, 0
+  index: -1
+
+Shooting15.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-attack8
+  rotate: false
+  xy: 1, 1
+  size: 919, 821
+  orig: 919, 821
+  offset: 0, 0
+  index: -1
+
+Shooting16.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+robot4-attack9
+  rotate: false
+  xy: 1, 1
+  size: 919, 821
+  orig: 919, 821
+  offset: 0, 0
+  index: -1
