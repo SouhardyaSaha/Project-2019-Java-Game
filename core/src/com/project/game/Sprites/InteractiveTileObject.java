@@ -5,6 +5,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.*;
 import com.project.game.CrisisGame;
+import com.project.game.Screens.PlayScreen;
 
 public abstract class InteractiveTileObject {
 
@@ -14,9 +15,11 @@ public abstract class InteractiveTileObject {
     protected Rectangle bounds;
     protected Body body;
 
-    public InteractiveTileObject(World world, TiledMap map, Rectangle bounds) {
-        this.world = world;
-        this.map = map;
+    protected Fixture fixture;
+
+    public InteractiveTileObject(PlayScreen screen, Rectangle bounds) {
+        this.world = screen.getWorld();
+        this.map = screen.getMap();
         this.bounds = bounds;
         
         BodyDef bdef = new BodyDef();
@@ -30,6 +33,14 @@ public abstract class InteractiveTileObject {
 
         shape.setAsBox(bounds.getWidth() / 2 / CrisisGame.PPM,  bounds.getHeight() / 2 / CrisisGame.PPM);
         fdef.shape = shape;
+        fdef.filter.categoryBits = CrisisGame.OBJECT_BIT;
         body.createFixture(fdef);
+        fixture = body.createFixture(fdef);
+    }
+
+    public void setCategoryFiler(short filerBit){
+        Filter filter = new Filter();
+        filter.categoryBits = filerBit;
+        fixture.setFilterData(filter);
     }
 }

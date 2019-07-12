@@ -1,20 +1,32 @@
 package com.project.game.Tools;
 
-import com.badlogic.gdx.physics.box2d.Contact;
-import com.badlogic.gdx.physics.box2d.ContactImpulse;
-import com.badlogic.gdx.physics.box2d.ContactListener;
-import com.badlogic.gdx.physics.box2d.Manifold;
+import com.badlogic.gdx.physics.box2d.*;
+import com.project.game.CrisisGame;
 
 import java.awt.event.ContainerListener;
 
 public class worldContactListener implements ContactListener {
 
-    public worldContactListener() {
-
-    }
+//    public worldContactListener(Contact contact) {
+//
+//    }
 
     @Override
     public void beginContact(Contact contact) {
+        Fixture fixA = contact.getFixtureA();
+        Fixture fixB = contact.getFixtureB();
+
+        int cdef = fixA.getFilterData().categoryBits | fixB.getFilterData().categoryBits;
+
+        switch (cdef){
+            case CrisisGame.ENEMY_BIT | CrisisGame.BULLET_BIT:
+
+                if(fixA.getFilterData().categoryBits == CrisisGame.BULLET_BIT)
+                    ((Bullet)fixA.getUserData()).hitEnemy();
+                else if(fixB.getFilterData().categoryBits == CrisisGame.BULLET_BIT)
+                    ( (Bullet)fixB.getUserData()).hitEnemy();
+
+        }
 
     }
 
