@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -16,10 +17,11 @@ import javax.print.DocFlavor;
 
 public class Bullet extends Sprite{
     private static final int speed = 12;
-    private static Texture texture;
+    private Texture texture;
     private TextureRegion bulletRegion;
     private boolean setToDestroy;
     private boolean destroyed;
+    private float stateTime;
 //    private static Sprite sprite;
     private boolean right;
 
@@ -42,6 +44,7 @@ public class Bullet extends Sprite{
         else texture = new Texture("fire_blueflip.png");
 
         bulletRegion = new TextureRegion(texture);
+        stateTime = 0;
 //            sprite = new Sprite(texture);
 //            if(!right) sprite.flip(true, false);
         defineBulletBody();
@@ -61,11 +64,12 @@ public class Bullet extends Sprite{
             world.destroyBody(b2body);
             destroyed = true;
             setRegion(new Texture("EmptyBullet.png"));
+            stateTime = 0;
         }
         else if (!destroyed){
 
             ///box2d Body for bullet update
-            setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2f);
+            setPosition(b2body.getPosition().x - getWidth() / 1.2f , b2body.getPosition().y - getHeight() / 2.2f);
             setRegion(bulletRegion);
 
             if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)){
@@ -89,6 +93,7 @@ public class Bullet extends Sprite{
     protected void defineBulletBody() {
         BodyDef bdef = new BodyDef();
         bdef.position.set(x,  y);
+        bdef.bullet = true;
 //        bdef.position.set(320/CrisisGame.PPM,  700/CrisisGame.PPM );
         bdef.type = BodyDef.BodyType.DynamicBody;
         bdef.gravityScale = 0;
@@ -109,20 +114,11 @@ public class Bullet extends Sprite{
                 | CrisisGame.BARREL_BIT | CrisisGame.ENEMY_BIT
                 | CrisisGame.BOX_BIT  ;
         b2body.createFixture(fdef).setUserData(this);
+    }
 
-//        EdgeShape bulletHitShape = new EdgeShape();
-//        Vector2[] vertice = new Vector2[2];
-//
-//        vertice[0] = new Vector2(getWidth()+2, getHeight()).scl(1 / CrisisGame.PPM);
-//        vertice[1] = new Vector2(getWidth()+2, getHeight() - 3).scl(1 / CrisisGame.PPM);
-//        bulletHitShape.set(vertice);
-//        fdef.shape = bulletHitShape;
-//        fdef.filter.categoryBits = CrisisGame.BULLET_BIT;
-//        fdef.filter.maskBits =    CrisisGame.GROUND_BIT
-//                | CrisisGame.BARREL_BIT | CrisisGame.ENEMY_BIT
-//                | CrisisGame.BOX_BIT  ;
-//        b2body.createFixture(fdef);
-
+    public  void draw(Batch batch){
+        if(!destroyed || stateTime < 1)
+            super.draw(batch);
     }
 //
     public void hitEnemy(){

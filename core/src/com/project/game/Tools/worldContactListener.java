@@ -1,6 +1,7 @@
 package com.project.game.Tools;
 
 import com.badlogic.gdx.physics.box2d.*;
+import com.project.game.Characters.Enemy;
 import com.project.game.CrisisGame;
 
 import java.awt.event.ContainerListener;
@@ -21,10 +22,15 @@ public class worldContactListener implements ContactListener {
         switch (cdef){
             case CrisisGame.ENEMY_BIT | CrisisGame.BULLET_BIT:
 
-                if(fixA.getFilterData().categoryBits == CrisisGame.BULLET_BIT)
+                if(fixA.getFilterData().categoryBits == CrisisGame.BULLET_BIT){
                     ((Bullet)fixA.getUserData()).hitEnemy();
-                else if(fixB.getFilterData().categoryBits == CrisisGame.BULLET_BIT)
+                    ((Enemy) fixB.getUserData()).enemyBulletHit();
+
+                }
+                else if(fixB.getFilterData().categoryBits == CrisisGame.BULLET_BIT){
                     ( (Bullet)fixB.getUserData()).hitEnemy();
+                    ((Enemy) fixA.getUserData()).enemyBulletHit();
+                }
 
         }
 
