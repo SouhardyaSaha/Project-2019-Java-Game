@@ -11,6 +11,8 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.project.game.Characters.EnemyOne;
@@ -27,10 +29,12 @@ import java.util.ArrayList;
 
 public class PlayScreen implements Screen {
 
+    //Main Player Bullet
     ArrayList<Bullet> bullets;
 
     // backGround
     private Texture backgroundImage;
+
 
     ///Game Reference
     private CrisisGame game;
@@ -54,11 +58,10 @@ public class PlayScreen implements Screen {
     Contact contact;
 
     ///MainPlayer
-    private MainPlayer mainPlayer;
+    public MainPlayer mainPlayer;
 
     ///Enemy
     private EnemyOne enemyTest;
-
 
 
     public  PlayScreen(CrisisGame game){
@@ -71,7 +74,7 @@ public class PlayScreen implements Screen {
         gameCam = new OrthographicCamera();
 
         ///creating viewport to maintain ratio
-        gamePort = new StretchViewport(CrisisGame.v_WIDTH / CrisisGame.PPM * 1.4f, CrisisGame.v_HEIGHT /  CrisisGame.PPM * 1.4f, gameCam);
+        gamePort = new FillViewport(CrisisGame.v_WIDTH / CrisisGame.PPM * 1.6f, CrisisGame.v_HEIGHT /  CrisisGame.PPM * 1.4f, gameCam);
 
         ///HUD for scores/timers/level info
         hud = new Hud(game.batch);
@@ -98,12 +101,12 @@ public class PlayScreen implements Screen {
         mainPlayer = new MainPlayer(this);
 
         ///creating enimies
-        enemyTest = new EnemyOne(this, 2500, 700);
+        enemyTest = new EnemyOne(this, 2000, 700);
 
         ///creating bullets
         bullets = new ArrayList<Bullet>();
 
-
+        ///for collision detection
         world.setContactListener(new worldContactListener());
 
 
@@ -170,7 +173,7 @@ public class PlayScreen implements Screen {
         bullets.removeAll(bulletToRemove);
 
         ///attach gameCam with players x co ordinate
-        gameCam.position.x = mainPlayer.b2body.getPosition().x;
+        gameCam.position.x = mainPlayer.b2body.getPosition().x ;
 //        gameCam.position.y = mainPlayer.b2body.getPosition().y;
 
         //update the gamecam with correct coordinates after changes
@@ -184,15 +187,13 @@ public class PlayScreen implements Screen {
     public void render(float delta) {
         update(delta);
 
-        ///ajaira
-
         ///clear the game screen with black
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         ///render background
         game.batch.begin();
-        game.batch.draw(backgroundImage, 0, 0, 1600, 1100);
+        game.batch.draw(backgroundImage, 0,0, 1600/2f, 1100/2f);
         game.batch.end();
 
         //render gameMap

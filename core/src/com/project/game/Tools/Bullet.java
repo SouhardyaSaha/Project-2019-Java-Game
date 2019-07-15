@@ -17,19 +17,19 @@ import javax.print.DocFlavor;
 
 public class Bullet extends Sprite{
     private static final int speed = 12;
-    private Texture texture;
-    private TextureRegion bulletRegion;
-    private boolean setToDestroy;
-    private boolean destroyed;
-    private float stateTime;
+    public Texture texture;
+    public TextureRegion bulletRegion;
+    public boolean setToDestroy;
+    public boolean destroyed;
+    public float stateTime;
 //    private static Sprite sprite;
-    private boolean right;
+    public boolean right;
 
     public Body b2body;
-    private World world;
+    public World world;
     private PlayScreen screen;
 
-    private float x, y;
+    public float x, y;
     public boolean remove = false;
 
     public Bullet(PlayScreen screen, float x, float y, boolean fireRight){
@@ -69,7 +69,7 @@ public class Bullet extends Sprite{
         else if (!destroyed){
 
             ///box2d Body for bullet update
-            setPosition(b2body.getPosition().x - getWidth() / 1.2f , b2body.getPosition().y - getHeight() / 2.2f);
+            setPosition(b2body.getPosition().x - getWidth() / 1.6f , b2body.getPosition().y - getHeight() / 2.2f);
             setRegion(bulletRegion);
 
             if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)){
@@ -101,18 +101,14 @@ public class Bullet extends Sprite{
 
         FixtureDef fdef = new FixtureDef();
         CircleShape shape = new CircleShape();
-        shape.setRadius(50/ CrisisGame.PPM);
-//        PolygonShape shape = new PolygonShape();
-//        shape.setAsBox(60/ CrisisGame.PPM,165/ CrisisGame.PPM);
+        shape.setRadius(40/ CrisisGame.PPM);
 
 
         fdef.shape = shape;
         fdef.restitution = 0;
-//        fdef.friction = 0;
+        fdef.friction = 0;
         fdef.filter.categoryBits = CrisisGame.BULLET_BIT;
-        fdef.filter.maskBits =    CrisisGame.GROUND_BIT
-                | CrisisGame.BARREL_BIT | CrisisGame.ENEMY_BIT
-                | CrisisGame.BOX_BIT  ;
+        fdef.filter.maskBits =    CrisisGame.GROUND_BIT | CrisisGame.ENEMY_BIT;
         b2body.createFixture(fdef).setUserData(this);
     }
 

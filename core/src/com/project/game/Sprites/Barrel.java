@@ -10,7 +10,7 @@ public class Barrel extends InteractiveTileObject {
     public Barrel(PlayScreen screen, Rectangle bounds) {
         super(screen, bounds);
         fixture.setUserData(this);
-        setCategoryFiler(CrisisGame.BARREL_BIT);
+        setCategoryFiler(CrisisGame.GROUND_BIT);
 
 
     }

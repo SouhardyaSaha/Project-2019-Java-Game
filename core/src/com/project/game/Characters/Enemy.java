@@ -11,6 +11,8 @@ import sun.reflect.generics.tree.VoidDescriptor;
 
 public abstract class Enemy extends Sprite {
 
+    ///Enemy States
+
     protected World world;
     protected PlayScreen screen;
     public float x,y;
@@ -24,7 +26,7 @@ public abstract class Enemy extends Sprite {
         this.y = y;
         setPosition(x , y );
         defineEnemy();
-        velocity = new Vector2(1, 0);
+        velocity = new Vector2(0f, 0);
     }
 
     protected abstract void defineEnemy();

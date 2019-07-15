@@ -17,10 +17,10 @@ public class CrisisGame extends Game {
 	///variables for identifying object types in box2d
 	 public static final short GROUND_BIT = 1;
 	 public static final short PLAYER_BIT = 2;
-	 public static final short BOX_BIT = 4;
+	 public static final short ENEMY_BULLET_BIT = 32;
 	 public static final short ACID_BIT = 8;
 	 public static final short DOOR_BIT = 16;
-	 public static final short BARREL_BIT = 32;
+//	 public static final short BARREL_BIT = 32;
 	 public static final short SPIKE_BIT = 64;
 	 public static final short BULLET_BIT = 128;
 	 public static final short ENEMY_BIT = 256;
@@ -38,7 +38,6 @@ public class CrisisGame extends Game {
 	@Override
 	public void render () {
 		super.render();
-//		System.out.println(1/Gdx.graphics.getDeltaTime());
 	}
 	
 	@Override

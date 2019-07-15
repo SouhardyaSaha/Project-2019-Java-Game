@@ -11,5 +11,6 @@ public class Acid extends InteractiveTileObject {
         super(screen, bounds);
         fixture.setUserData(this);
         setCategoryFiler(CrisisGame.ACID_BIT);
+        setCategoryFiler(CrisisGame.OBJECT_BIT);
     }
 }

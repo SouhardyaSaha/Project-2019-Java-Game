@@ -29,8 +29,11 @@ public class MainPlayer extends Sprite {
     public boolean walkingLeft;
 //    public boolean shoot;
 
+    private int bulletHitCount;
+    private boolean setToDestroy, destroyed;
+
     public MainPlayer(PlayScreen screen){
-        super(screen.getAtlas().findRegion("robot4-walk8"));
+//        super(screen.getAtlas().findRegion("robot4-walk8"));
         this.world = screen.getWorld();
 
         currentState = State.STANDING;
@@ -64,6 +67,10 @@ public class MainPlayer extends Sprite {
         defineMainPlayer();
         setBounds(0, 0, 500 / CrisisGame.PPM, 500 / CrisisGame.PPM);
         setRegion(playerStand);
+
+        bulletHitCount = 0;
+        setToDestroy = false;
+        destroyed = false;
     }
 
     public  void update(float dt){
@@ -136,7 +143,7 @@ public class MainPlayer extends Sprite {
 
     public void defineMainPlayer(){
         BodyDef bdef = new BodyDef();
-        bdef.position.set(320/ CrisisGame.PPM,700/ CrisisGame.PPM);
+        bdef.position.set(2000/ CrisisGame.PPM,700/ CrisisGame.PPM);
         bdef.type = BodyDef.BodyType.DynamicBody;
         b2body = world.createBody(bdef);
 
@@ -144,16 +151,22 @@ public class MainPlayer extends Sprite {
 //        CircleShape shape = new CircleShape();
 //        shape.setRadius(130/ CrisisGame.PPM);
         fdef.filter.categoryBits = CrisisGame.PLAYER_BIT;
-        fdef.filter.maskBits =    CrisisGame.GROUND_BIT | CrisisGame.ACID_BIT
-                                | CrisisGame.BARREL_BIT
-                                | CrisisGame.BOX_BIT | CrisisGame.ENEMY_BIT ;
+        fdef.filter.maskBits =    CrisisGame.GROUND_BIT | CrisisGame.ACID_BIT | CrisisGame.OBJECT_BIT
+                                | CrisisGame.ENEMY_BIT | CrisisGame.ENEMY_BULLET_BIT;
 
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(60/ CrisisGame.PPM,185/ CrisisGame.PPM);
 
 
         fdef.shape = shape;
-        b2body.createFixture(fdef);
+        b2body.createFixture(fdef).setUserData(this);
+    }
+
+    public void playerBulletHit() {
+        bulletHitCount++;
+        if(bulletHitCount > 20) {
+            setToDestroy = true;
+        }
     }
 
 }
