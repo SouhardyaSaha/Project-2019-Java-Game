@@ -1,8 +1,6 @@
 package com.project.game.Screens;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -27,7 +25,7 @@ import com.badlogic.gdx.graphics.GL20;
 import java.util.ArrayList;
 
 
-public class PlayScreen implements Screen {
+public class PlayScreen implements Screen, InputProcessor{
 
     //Main Player Bullet
     ArrayList<Bullet> bullets;
@@ -130,8 +128,8 @@ public class PlayScreen implements Screen {
             System.out.println("Shoot");
         }
 
-        if(Gdx.input.isKeyJustPressed(Input.Keys.UP)){
-            mainPlayer.b2body.applyLinearImpulse(new Vector2(0, 8f), mainPlayer.b2body.getWorldCenter(),true);
+        if(mainPlayer.b2body.getLinearVelocity().y == 0 &&  Gdx.input.isKeyJustPressed(Input.Keys.UP)){
+            mainPlayer.b2body.applyLinearImpulse(new Vector2(0, 10f), mainPlayer.b2body.getWorldCenter(),true);
 //            gameCam.position.y += 100 * dt;
         }
 
@@ -148,10 +146,11 @@ public class PlayScreen implements Screen {
 //            gameCam.position.y -= 100 * dt;
         }
 
-
     }
 
     public void update(float dt){
+        ///ajaira
+        Gdx.input.setInputProcessor(this);
         //handle user input first
         handleInput(dt);
 
@@ -257,5 +256,46 @@ public class PlayScreen implements Screen {
         world.dispose();
         b2dr.dispose();
         hud.dispose();
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+            return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        System.out.println(screenX +" "+(Gdx.graphics.getHeight() - 1 -screenY));
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(int amount) {
+        return false;
     }
 }

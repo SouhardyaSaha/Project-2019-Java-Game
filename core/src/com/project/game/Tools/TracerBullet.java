@@ -90,7 +90,7 @@ public class TracerBullet extends Sprite {
 
         FixtureDef fdef = new FixtureDef();
         CircleShape shape = new CircleShape();
-        shape.setRadius(50/ CrisisGame.PPM);
+        shape.setRadius(30/ CrisisGame.PPM);
 
         fdef.shape = shape;
         fdef.restitution = 0;

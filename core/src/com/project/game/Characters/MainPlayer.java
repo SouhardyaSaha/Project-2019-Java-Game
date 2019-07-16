@@ -79,8 +79,6 @@ public class MainPlayer extends Sprite {
         else
             setPosition(b2body.getPosition().x - getWidth() / 2f, b2body.getPosition().y - getHeight() / 1.7f );
         setRegion(getFrame(dt));
-//        if (Gdx.input.isKeyJustPressed(Input.Keys.CONTROL_LEFT)) shoot = true;
-//        if (playerShooting.isAnimationFinished(stateTimer)) shoot = false;
     }
 
     public TextureRegion getFrame(float dt){
@@ -143,7 +141,7 @@ public class MainPlayer extends Sprite {
 
     public void defineMainPlayer(){
         BodyDef bdef = new BodyDef();
-        bdef.position.set(2000/ CrisisGame.PPM,700/ CrisisGame.PPM);
+        bdef.position.set(1000/ CrisisGame.PPM,700/ CrisisGame.PPM);
         bdef.type = BodyDef.BodyType.DynamicBody;
         b2body = world.createBody(bdef);
 

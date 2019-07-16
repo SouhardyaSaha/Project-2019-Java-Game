@@ -14,7 +14,8 @@ import com.project.game.Screens.PlayScreen;
 
 public class EnemyBullet extends Sprite {
 //    World world;
-public Texture texture;
+
+    public Texture texture;
     public TextureRegion bulletRegion;
     public boolean setToDestroy;
     public boolean destroyed;
