@@ -10,25 +10,18 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.FillViewport;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.project.game.Characters.EnemyBoss;
 import com.project.game.Characters.EnemyOne;
 import com.project.game.CrisisGame;
 import com.project.game.Scenes.Hud;
 import com.project.game.Characters.MainPlayer;
 import com.project.game.Tools.Box2dWorldCreator;
-import com.project.game.Tools.Bullet;
 import com.project.game.Tools.worldContactListener;
 import com.badlogic.gdx.graphics.GL20;
 
-import java.util.ArrayList;
-
 
 public class PlayScreen implements Screen, InputProcessor{
-
-    //Main Player Bullet
-    ArrayList<Bullet> bullets;
 
     // backGround
     private Texture backgroundImage;
@@ -59,7 +52,10 @@ public class PlayScreen implements Screen, InputProcessor{
     public MainPlayer mainPlayer;
 
     ///Enemy
-    private EnemyOne enemyTest;
+    private EnemyOne type1;
+    private EnemyBoss boss;
+
+    public int level;
 
 
     public  PlayScreen(CrisisGame game){
@@ -77,17 +73,31 @@ public class PlayScreen implements Screen, InputProcessor{
         ///HUD for scores/timers/level info
         hud = new Hud(game.batch);
 
-        backgroundImage = new Texture("BG apocalyptic 3.png");
 
         //Load map and setup map renderer
         mapLoader = new TmxMapLoader();
-        map = mapLoader.load("Maps/Crisis.tmx");
+        level = 2;
+        switch (level){
+            case 1:
+                backgroundImage = new Texture("BG apocalyptic 3.png");
+                map = mapLoader.load("Maps/Crisis.tmx");
+                break;
+            case 2:
+                backgroundImage = new Texture("BG alien 4.jpg");
+                map = mapLoader.load("Maps/CrisisBoss.tmx");
+                break;
+            default:
+                backgroundImage = new Texture("BG apocalyptic 3.png");
+                map = mapLoader.load("Maps/Crisis.tmx");
+                break;
+        }
+
         renderer = new OrthogonalTiledMapRenderer(map, 1 / CrisisGame.PPM);
 
         //set the gamecam to start of the map
         gameCam.position.set(gamePort.getWorldWidth()  / 1.5f , gamePort.getWorldHeight() / 1.7f , 0);
 
-        //Box2d World setting the gravity of
+        //Box2d World setting the gravity
         world = new World(new Vector2(0,-15), true);
 
         //allow the debug lines of box2d
@@ -95,19 +105,25 @@ public class PlayScreen implements Screen, InputProcessor{
 
         new Box2dWorldCreator(this);
 
-        //creating main character
-        mainPlayer = new MainPlayer(this);
+        switch (level)
+        {
+            case 1:
+                //creating main character
+                mainPlayer = new MainPlayer(this, 1000, 700);
 
-        ///creating enimies
-        enemyTest = new EnemyOne(this, 2000, 700);
-
-        ///creating bullets
-        bullets = new ArrayList<Bullet>();
+                ///creating enimies
+                type1 = new EnemyOne(this, 2000, 700);
+                break;
+            case 2:
+                //creating main character
+                mainPlayer = new MainPlayer(this, 1000, 700);
+                boss = new EnemyBoss(this, 1200f, 700f);
+                ///creating enimies
+                break;
+        }
 
         ///for collision detection
         world.setContactListener(new worldContactListener());
-
-
     }
 
     public TextureAtlas getAtlas(){
@@ -119,60 +135,32 @@ public class PlayScreen implements Screen, InputProcessor{
 
     }
 
-    public void handleInput(float dt){
 
-        if(Gdx.input.isKeyJustPressed(Input.Keys.CONTROL_LEFT)){
-            float bulletX = mainPlayer.b2body.getPosition().x ;
-            float bulletY = mainPlayer.b2body.getPosition().y;
-            bullets.add(new Bullet(this, bulletX, bulletY, mainPlayer.walkingLeft));
-            System.out.println("Shoot");
-        }
-
-        if(mainPlayer.b2body.getLinearVelocity().y == 0 &&  Gdx.input.isKeyJustPressed(Input.Keys.UP)){
-            mainPlayer.b2body.applyLinearImpulse(new Vector2(0, 10f), mainPlayer.b2body.getWorldCenter(),true);
-//            gameCam.position.y += 100 * dt;
-        }
-
-        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) && mainPlayer.b2body.getLinearVelocity().x <= 2){
-            mainPlayer.b2body.applyLinearImpulse(new Vector2(0.3f, 0), mainPlayer.b2body.getWorldCenter(),true);
-//            gameCam.position.x += 100 * dt;
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT) && mainPlayer.b2body.getLinearVelocity().x >= -2){
-            mainPlayer.b2body.applyLinearImpulse(new Vector2(-0.3f, 0), mainPlayer.b2body.getWorldCenter(),true);
-//            gameCam.position.x -= 100 * dt;
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
-            mainPlayer.b2body.applyLinearImpulse(new Vector2(0, -4f), mainPlayer.b2body.getWorldCenter(),true);
-//            gameCam.position.y -= 100 * dt;
-        }
-
-    }
 
     public void update(float dt){
         ///ajaira
         Gdx.input.setInputProcessor(this);
         //handle user input first
-        handleInput(dt);
+//        handleInput(dt);
 
         world.step(1/60f, 6, 2);
 
-        ///main player update
-        mainPlayer.update(dt);
-        ///enemy update
-        enemyTest.update(dt);
-
-        ///bullets update
-        ArrayList<Bullet> bulletToRemove = new ArrayList<Bullet>();
-        for(Bullet bullet : bullets){
-            bullet.update(dt);
-            if(bullet.remove){
-                bulletToRemove.add(bullet);
-            }
+        switch (level){
+            case 1:
+                ///main player update
+                mainPlayer.update(dt);
+                ///enemy update
+                type1.update(dt);
+                break;
+            case 2:
+                ///main player update
+                mainPlayer.update(dt);
+                boss.update(dt);
+                break;
         }
-        bullets.removeAll(bulletToRemove);
 
         ///attach gameCam with players x co ordinate
-        gameCam.position.x = mainPlayer.b2body.getPosition().x ;
+        gameCam.position.x = mainPlayer.b2body.getPosition().x;
 //        gameCam.position.y = mainPlayer.b2body.getPosition().y;
 
         //update the gamecam with correct coordinates after changes
@@ -204,14 +192,15 @@ public class PlayScreen implements Screen, InputProcessor{
         ///
         game.batch.setProjectionMatrix(gameCam.combined);
         game.batch.begin();
-        mainPlayer.draw(game.batch);
-        enemyTest.draw(game.batch);
-        game.batch.end();
-
-        ///bullet rendering
-        game.batch.begin();
-        for (Bullet bullet : bullets){
-            bullet.draw(game.batch);
+        switch (level){
+            case 1:
+                mainPlayer.draw(game.batch);
+                type1.draw(game.batch);
+                break;
+            case 2:
+                boss.draw(game.batch);
+                mainPlayer.draw(game.batch);
+                break;
         }
         game.batch.end();
 

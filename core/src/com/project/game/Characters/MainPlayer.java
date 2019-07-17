@@ -4,12 +4,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.project.game.CrisisGame;
 import com.project.game.Screens.PlayScreen;
+import com.project.game.Tools.Bullet;
+
+import java.util.ArrayList;
 
 public class MainPlayer extends Sprite {
 
@@ -17,24 +22,35 @@ public class MainPlayer extends Sprite {
     public State currentState;
     public State previousState;
 
+    ///Main Player Bullets
+    ArrayList<Bullet> bullets;
+
     public World world;
     public Body b2body;
 
+    private TextureRegion region;
     private TextureRegion playerStand;
     private TextureRegion playerShooting;
     private Animation playerRun;
     private Animation playerJump;
     private Animation playerFalling;
+    private Animation playerDieing;
     private float stateTimer;
     public boolean walkingLeft;
+    public float posX, posY;
 //    public boolean shoot;
 
+    PlayScreen screen;
     private int bulletHitCount;
     private boolean setToDestroy, destroyed;
 
-    public MainPlayer(PlayScreen screen){
+    public MainPlayer(PlayScreen screen, float posX, float posY){
 //        super(screen.getAtlas().findRegion("robot4-walk8"));
+
+        this.posX = posX;
+        this.posY = posY;
         this.world = screen.getWorld();
+        this.screen = screen;
 
         currentState = State.STANDING;
         previousState = State.STANDING;
@@ -54,10 +70,13 @@ public class MainPlayer extends Sprite {
         }
         playerJump = new Animation(1f/30f, frames);
         frames.clear();
-//
-//        for (int i = 1; i<=16; i++){
-//            frames.add(new TextureRegion(new Texture("Animations/Shooting/Shooting" + i + ".png")));
-//        }
+
+        for (int i = 1; i<=20; i++){
+            frames.add(new TextureRegion(new Texture("Animations/die/robot4-die" + i + ".png")));
+        }
+        playerDieing = new Animation(1f/20f, frames);
+        frames.clear();
+
         playerShooting = new TextureRegion(new Texture("Animations/Shooting/Shooting15.png"));
 
         frames.clear();
@@ -71,14 +90,45 @@ public class MainPlayer extends Sprite {
         bulletHitCount = 0;
         setToDestroy = false;
         destroyed = false;
+
+        ///creating bullets
+        bullets = new ArrayList<Bullet>();
     }
 
     public  void update(float dt){
-        if(walkingLeft)
-            setPosition(b2body.getPosition().x - getWidth() / 2.2f, b2body.getPosition().y - getHeight() / 1.7f );
-        else
-            setPosition(b2body.getPosition().x - getWidth() / 2f, b2body.getPosition().y - getHeight() / 1.7f );
-        setRegion(getFrame(dt));
+
+        if(destroyed) stateTimer+=dt;
+        if(setToDestroy && !destroyed){
+            world.destroyBody(b2body);
+            destroyed = true;
+            stateTimer = 0;
+        }
+        else if (!destroyed){
+            handleInput(dt);
+            if(walkingLeft)
+                setPosition(b2body.getPosition().x - getWidth() / 2.2f, b2body.getPosition().y - getHeight() / 1.7f );
+            else
+                setPosition(b2body.getPosition().x - getWidth() / 2f, b2body.getPosition().y - getHeight() / 1.7f );
+
+            setRegion(getFrame(dt));
+
+        }
+        else if (destroyed){
+            region = (TextureRegion) playerDieing.getKeyFrame(stateTimer, false);
+            if(!walkingLeft && !region.isFlipX()) region.flip(true,false);
+            if(walkingLeft && region.isFlipX()) region.flip(true,false);
+            setRegion(region);
+        }
+
+        ///for bullets update
+        ArrayList<Bullet> bulletToRemove = new ArrayList<Bullet>();
+        for(Bullet bullet : bullets){
+            bullet.update(dt);
+            if(bullet.remove){
+                bulletToRemove.add(bullet);
+            }
+        }
+        bullets.removeAll(bulletToRemove);
     }
 
     public TextureRegion getFrame(float dt){
@@ -100,8 +150,6 @@ public class MainPlayer extends Sprite {
             case Shooting:
                 Region = playerShooting;
                 break;
-//                Region = (TextureRegion) playerShooting.getKeyFrame(stateTimer, false);
-//                break;
             default:
                 Region = playerStand;
                 break;
@@ -115,11 +163,6 @@ public class MainPlayer extends Sprite {
             Region.flip(true, false);
             walkingLeft = true;
         }
-
-//        if(Gdx.input.isKeyJustPressed(Input.Keys.CONTROL_LEFT)) {
-//            shoot = true;
-//        }
-//        else shoot = false;
 
         stateTimer = currentState == previousState ? stateTimer + dt : 0;
         previousState = currentState;
@@ -139,15 +182,45 @@ public class MainPlayer extends Sprite {
             return State.STANDING;
     }
 
+    public void handleInput(float dt){
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.CONTROL_LEFT)){
+            float bulletX = b2body.getPosition().x ;
+            float bulletY = b2body.getPosition().y;
+            bullets.add(new Bullet(screen, bulletX, bulletY, walkingLeft));
+            System.out.println("Shoot");
+        }
+
+        if(b2body.getLinearVelocity().y == 0 &&  Gdx.input.isKeyJustPressed(Input.Keys.UP)){
+            b2body.applyLinearImpulse(new Vector2(0, 10f), b2body.getWorldCenter(),true);
+//            gameCam.position.y += 100 * dt;
+        }
+
+        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) && b2body.getLinearVelocity().x <= 2){
+            b2body.applyLinearImpulse(new Vector2(0.3f, 0), b2body.getWorldCenter(),true);
+//            gameCam.position.x += 100 * dt;
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.LEFT) && b2body.getLinearVelocity().x >= -2){
+            b2body.applyLinearImpulse(new Vector2(-0.3f, 0), b2body.getWorldCenter(),true);
+//            gameCam.position.x -= 100 * dt;
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
+            b2body.applyLinearImpulse(new Vector2(0, -4f), b2body.getWorldCenter(),true);
+//            gameCam.position.y -= 100 * dt;
+        }
+
+    }
+
     public void defineMainPlayer(){
         BodyDef bdef = new BodyDef();
-        bdef.position.set(1000/ CrisisGame.PPM,700/ CrisisGame.PPM);
+        bdef.position.set(posX / CrisisGame.PPM, posY / CrisisGame.PPM);
         bdef.type = BodyDef.BodyType.DynamicBody;
         b2body = world.createBody(bdef);
 
         FixtureDef fdef = new FixtureDef();
 //        CircleShape shape = new CircleShape();
 //        shape.setRadius(130/ CrisisGame.PPM);
+        fdef.restitution = 0;
         fdef.filter.categoryBits = CrisisGame.PLAYER_BIT;
         fdef.filter.maskBits =    CrisisGame.GROUND_BIT | CrisisGame.ACID_BIT | CrisisGame.OBJECT_BIT
                                 | CrisisGame.ENEMY_BIT | CrisisGame.ENEMY_BULLET_BIT;
@@ -160,9 +233,19 @@ public class MainPlayer extends Sprite {
         b2body.createFixture(fdef).setUserData(this);
     }
 
+    public void draw(Batch batch){
+        if(!destroyed || stateTimer < 3)
+            super.draw(batch);
+
+        ///bullet rendering
+        for (Bullet bullet : bullets){
+            bullet.draw(batch);
+        }
+    }
+
     public void playerBulletHit() {
         bulletHitCount++;
-        if(bulletHitCount > 20) {
+        if(bulletHitCount > 5) {
             setToDestroy = true;
         }
     }

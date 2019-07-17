@@ -1,8 +1,6 @@
 package com.project.game.Sprites;
 
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.physics.box2d.World;
 import com.project.game.CrisisGame;
 import com.project.game.Screens.PlayScreen;
 
@@ -11,6 +9,6 @@ public class Ground extends InteractiveTileObject {
         super(screen, bounds);
 
         fixture.setUserData(this);
-        setCategoryFiler(CrisisGame.GROUND_BIT);
+        setCategoryFilter(CrisisGame.GROUND_BIT);
     }
 }

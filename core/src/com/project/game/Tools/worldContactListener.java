@@ -24,7 +24,7 @@ public class worldContactListener implements ContactListener {
                     ((Enemy) fixB.getUserData()).enemyBulletHit();
 
                 }
-                else if(fixB.getFilterData().categoryBits == CrisisGame.BULLET_BIT){
+                else {
                     ( (Bullet)fixB.getUserData()).hitEnemy();
                     ((Enemy) fixA.getUserData()).enemyBulletHit();
                 }
@@ -36,7 +36,7 @@ public class worldContactListener implements ContactListener {
                 if(fixA.getFilterData().categoryBits == CrisisGame.BULLET_BIT){
                     ((Bullet)fixA.getUserData()).hitEnemy();
                 }
-                else if(fixB.getFilterData().categoryBits == CrisisGame.BULLET_BIT){
+                else {
                     ( (Bullet)fixB.getUserData()).hitEnemy();
                 }
                 break;
@@ -47,7 +47,7 @@ public class worldContactListener implements ContactListener {
                 if(fixA.getFilterData().categoryBits == CrisisGame.ENEMY_BULLET_BIT){
                     ((EnemyBullet)fixA.getUserData()).hitEnemy();
                 }
-                else if(fixB.getFilterData().categoryBits == CrisisGame.ENEMY_BULLET_BIT){
+                else {
                     ( (EnemyBullet)fixB.getUserData()).hitEnemy();
                 }
                 break;
@@ -59,7 +59,7 @@ public class worldContactListener implements ContactListener {
                     ((MainPlayer) fixB.getUserData()).playerBulletHit();
 
                 }
-                else if(fixB.getFilterData().categoryBits == CrisisGame.ENEMY_BULLET_BIT){
+                else {
                     ((EnemyBullet)fixB.getUserData()).hitEnemy();
                     ((MainPlayer) fixA.getUserData()).playerBulletHit();
                 }

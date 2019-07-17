@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -22,23 +21,23 @@ public class EnemyOne extends Enemy {
     public enum State { Walking, STANDING, Shooting}
     public State currentState;
     public State previousState;
+
     ///EnemyBullets
     ArrayList<EnemyBullet> bullets;
     private boolean walkingLeft;
 
     private float stateTime;
-//    public float x,y;
     private TextureRegion region;
-    private Animation walkAnimation;
+    private TextureRegion playerStand;
     private TextureRegion shooting;
-    private Animation idleStand;
+    private Animation walkAnimation;
     private Animation dieAnimation;
     private Array<TextureRegion> frames;
     private int bulletHitCount;
 
     boolean setToDestroy, destroyed;
 
-//    private boolean shoot;
+    private boolean shoot;
 
 
     public EnemyOne(PlayScreen screen, float x, float y) {
@@ -55,11 +54,12 @@ public class EnemyOne extends Enemy {
         for(int i=0; i<=20; i++){
             frames.add(new TextureRegion(new Texture("Animations/Enemies/robot11/die/robot11-die" + i + ".png")));
         }
-        dieAnimation = new Animation(1f/9f, frames);
+        dieAnimation = new Animation(1f/20f, frames);
         frames.clear();
 
-        frames.add(new TextureRegion(new Texture("Animations/Enemies/robot11/attack/robot11-attack0.png")));
-        idleStand = new Animation(1f, frames);
+        playerStand = new TextureRegion(new Texture("Animations/Enemies/robot11/attack/robot11-attack0.png"));
+
+//        idleStand = new Animation(1f, frames);
         frames.clear();
 
         shooting = new TextureRegion(new Texture("Animations/Enemies/robot11/attack/robot11-attack12.png"));
@@ -68,7 +68,7 @@ public class EnemyOne extends Enemy {
 //        stateTime = 0;
         setBounds(10,10 , 350 / CrisisGame.PPM, 410 / CrisisGame.PPM);
 
-        region = (TextureRegion) idleStand.getKeyFrame(stateTime, true);
+        region = playerStand;
         setRegion( region);
         bulletHitCount = 0;
         setToDestroy = false;
@@ -80,7 +80,7 @@ public class EnemyOne extends Enemy {
 
         currentState = State.STANDING;
         previousState = State.STANDING;
-
+        stateTime = 0;
 //        shoot = false;
     }
 
@@ -96,15 +96,12 @@ public class EnemyOne extends Enemy {
             stateTime = 0;
         }
         else if (!destroyed) {
-            setVelocity();
             setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
             setRegion(getFrame(dt));
+            setVelocity();
 
-//            if(Gdx.input.isKeyJustPressed(Input.Keys.Z)){
-//                shoot = true;
-//            }
 
-            if(shoot && previousState != State.Shooting){
+            if(Gdx.input.isKeyJustPressed(Input.Keys.Z)){
                 float bulletX = b2body.getPosition().x;
                 float bulletY = b2body.getPosition().y;
                 bullets.add(new EnemyBullet(screen, bulletX, bulletY, walkingLeft));
@@ -161,13 +158,13 @@ public class EnemyOne extends Enemy {
                 Region = (TextureRegion) walkAnimation.getKeyFrame(stateTime, true);
                 break;
             case STANDING:
-                Region = (TextureRegion) idleStand.getKeyFrame(stateTime, true);
+                Region = playerStand;
                 break;
             case Shooting:
                 Region = shooting;
                 break;
             default:
-                Region = (TextureRegion) idleStand.getKeyFrame(stateTime, true);
+                Region = playerStand;
                 break;
         }
         if ((b2body.getLinearVelocity().x > 0 || !walkingLeft) && !Region.isFlipX() ){
@@ -186,7 +183,7 @@ public class EnemyOne extends Enemy {
     }
 
     public State getState(){
-        if (shoot)
+        if (Gdx.input.isKeyJustPressed(Input.Keys.Z))
             return State.Shooting;
         else if (b2body.getLinearVelocity().x != 0)
             return State.Walking;

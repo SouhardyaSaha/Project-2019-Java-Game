@@ -80,7 +80,7 @@ public class EnemyBullet extends Sprite {
         }
 
         if(x > 1600 || x < 0 ){
-            remove = true;
+//            remove = true;
         }
     }
 
@@ -94,6 +94,7 @@ public class EnemyBullet extends Sprite {
         b2body = world.createBody(bdef);
 
         FixtureDef fdef = new FixtureDef();
+        fdef.restitution = 0;
         CircleShape shape = new CircleShape();
         shape.setRadius(30/ CrisisGame.PPM);
 

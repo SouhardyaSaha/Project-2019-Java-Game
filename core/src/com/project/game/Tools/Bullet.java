@@ -107,8 +107,8 @@ public class Bullet extends Sprite{
         fdef.shape = shape;
         fdef.restitution = 0;
         fdef.friction = 0;
-        fdef.filter.categoryBits = CrisisGame.BULLET_BIT;
-        fdef.filter.maskBits =    CrisisGame.GROUND_BIT | CrisisGame.ENEMY_BIT;
+        fdef.filter.categoryBits = CrisisGame.ENEMY_BULLET_BIT;
+        fdef.filter.maskBits =    CrisisGame.GROUND_BIT ;
         b2body.createFixture(fdef).setUserData(this);
     }
 
