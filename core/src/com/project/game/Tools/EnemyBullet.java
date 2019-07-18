@@ -70,12 +70,15 @@ public class EnemyBullet extends Sprite {
             ///box2d Body for bullet update
             setPosition(b2body.getPosition().x - getWidth() / 1.6f , b2body.getPosition().y - getHeight() / 2.2f);
             setRegion(bulletRegion);
+//            b2body.setTransform(new Vector2(screen.mainPlayer.b2body.getPosition().x,screen.mainPlayer.b2body.getPosition().y), screen.mainPlayer.b2body.getAngle());
+
+
 
             if(Gdx.input.isKeyPressed(Input.Keys.Z)){
                 if(!right)
-                    b2body.applyLinearImpulse(new Vector2(10, 0), b2body.getWorldCenter(), true);
+                    b2body.applyLinearImpulse(new Vector2(5, -2), b2body.getWorldCenter(), true);
                 else
-                    b2body.applyLinearImpulse(new Vector2(-10, 0), b2body.getWorldCenter(), true);
+                    b2body.applyLinearImpulse(new Vector2(-5, -2), b2body.getWorldCenter(), true);
             }
         }
 
@@ -100,7 +103,7 @@ public class EnemyBullet extends Sprite {
 
 
         fdef.shape = shape;
-        fdef.restitution = 0;
+        fdef.restitution = -3;
         fdef.friction = 0;
         fdef.filter.categoryBits = CrisisGame.ENEMY_BULLET_BIT;
         fdef.filter.maskBits =  CrisisGame.GROUND_BIT | CrisisGame.PLAYER_BIT ;

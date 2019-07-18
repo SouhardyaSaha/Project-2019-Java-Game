@@ -8,7 +8,6 @@ public class PlayerDeath extends InteractiveTileObject {
     public PlayerDeath(PlayScreen screen, Rectangle bounds) {
         super(screen, bounds);
         fixture.setUserData(this);
-        setCategoryFilter(CrisisGame.ACID_BIT);
-        setCategoryFilter(CrisisGame.OBJECT_BIT);
+        setCategoryFilter(CrisisGame.GROUND_BIT);
     }
 }

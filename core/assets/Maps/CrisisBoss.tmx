@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="260" height="58" tilewidth="32" tileheight="32" infinite="0" nextlayerid="6" nextobjectid="12">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="260" height="58" tilewidth="32" tileheight="32" infinite="0" nextlayerid="6" nextobjectid="19">
  <tileset firstgid="1" name="Ground" tilewidth="32" tileheight="32" tilecount="1980" columns="60">
   <image source="../1920x1080/BG space 2.jpg" width="1920" height="1080"/>
  </tileset>
@@ -69,6 +69,12 @@
   <object id="2" x="5074" y="2136"/>
   <object id="8" x="11.0606" y="1600" width="8303.76" height="251.515"/>
   <object id="9" x="457.576" y="2006.06"/>
+  <object id="12" x="0" y="0" width="240" height="1608"/>
+  <object id="13" x="1816" y="2984"/>
+  <object id="14" x="8112" y="-8" width="208" height="1592"/>
+  <object id="15" x="8920" y="3272"/>
+  <object id="17" x="400" y="-192"/>
+  <object id="18" x="264" y="-280"/>
  </objectgroup>
  <objectgroup id="3" name="Object Layer 2"/>
  <objectgroup id="4" name="Object Layer 3">

@@ -105,8 +105,8 @@ public class EnemyBoss extends Sprite {
             stateTimer = 0;
         }
         else if (!destroyed){
-            handleInput(dt);
-//            setEnemeyMomentum();
+//            handleInput(dt);
+            setEnemyMomentum();
             if(walkingLeft)
                 setPosition(b2body.getPosition().x - getWidth() / 2.2f, b2body.getPosition().y - getHeight() / 1.7f );
             else
@@ -115,7 +115,7 @@ public class EnemyBoss extends Sprite {
             setRegion(getFrame(dt));
 
             ///For Bullets
-            if(Gdx.input.isKeyJustPressed(Input.Keys.A)){
+            if(Gdx.input.isKeyJustPressed(Input.Keys.Z)){
                 float bulletX = b2body.getPosition().x ;
                 float bulletY = b2body.getPosition().y;
                 bullets.add(new EnemyBullet(screen, bulletX, bulletY, walkingLeft));
@@ -186,7 +186,7 @@ public class EnemyBoss extends Sprite {
             return State.Falling;
         else if (b2body.getLinearVelocity().x != 0)
             return State.RUNNING;
-        else if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT))
+        else if (Gdx.input.isKeyPressed(Input.Keys.Z))
             return State.Shooting;
         else
             return State.STANDING;
@@ -196,50 +196,23 @@ public class EnemyBoss extends Sprite {
         BodyDef bdef = new BodyDef();
         bdef.position.set(posX/ CrisisGame.PPM,posY/ CrisisGame.PPM);
         bdef.type = BodyDef.BodyType.DynamicBody;
+//        bdef.gravityScale = 5;
         b2body = world.createBody(bdef);
 
         FixtureDef fdef = new FixtureDef();
-        fdef.restitution = 0;
-        fdef.filter.categoryBits = CrisisGame.ENEMY_BIT;
-        fdef.filter.maskBits =  CrisisGame.GROUND_BIT;
+        fdef.restitution = -3;
+//        fdef.density = 3;
+        fdef.filter.categoryBits = CrisisGame.ENEMY_BOSS_BIT;
+        fdef.filter.maskBits =  CrisisGame.GROUND_BIT | CrisisGame.BULLET_BIT;
 
-        CircleShape shape = new CircleShape();
-        shape.setRadius(600/ CrisisGame.PPM);
-//        PolygonShape shape = new PolygonShape();
-//        shape.setAsBox(600/ CrisisGame.PPM,600/ CrisisGame.PPM);
+//        CircleShape shape = new CircleShape();
+//        shape.setRadius(600/ CrisisGame.PPM);
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(600/ CrisisGame.PPM,500/ CrisisGame.PPM);
 
 
         fdef.shape = shape;
         b2body.createFixture(fdef).setUserData(this);
-    }
-
-    public void handleInput(float dt){
-
-        if(Gdx.input.isKeyJustPressed(Input.Keys.Z)){
-            float bulletX = b2body.getPosition().x ;
-            float bulletY = b2body.getPosition().y;
-            bullets.add(new EnemyBullet(screen, bulletX, bulletY, walkingLeft));
-            System.out.println("Shoot");
-        }
-
-        if(b2body.getLinearVelocity().y == 0 &&  Gdx.input.isKeyJustPressed(Input.Keys.UP)){
-            b2body.applyLinearImpulse(new Vector2(0, 10f), b2body.getWorldCenter(),true);
-//            gameCam.position.y += 100 * dt;
-        }
-
-        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) && b2body.getLinearVelocity().x <= 2){
-            b2body.applyLinearImpulse(new Vector2(0.3f, 0), b2body.getWorldCenter(),true);
-//            gameCam.position.x += 100 * dt;
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT) && b2body.getLinearVelocity().x >= -2){
-            b2body.applyLinearImpulse(new Vector2(-0.3f, 0), b2body.getWorldCenter(),true);
-//            gameCam.position.x -= 100 * dt;
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
-            b2body.applyLinearImpulse(new Vector2(0, -4f), b2body.getWorldCenter(),true);
-//            gameCam.position.y -= 100 * dt;
-        }
-
     }
 
     public void draw(Batch batch){
@@ -252,21 +225,33 @@ public class EnemyBoss extends Sprite {
         }
     }
 
-    public void setEnemeyMomentum(){
+    public void setEnemyMomentum(){
+
         float playerPos = screen.mainPlayer.b2body.getPosition().x;
         float enemyPos = b2body.getPosition().x;
-        if(Math.abs(playerPos - enemyPos) > 1200/ CrisisGame.PPM) {
-            if (screen.mainPlayer.b2body.getPosition().x > b2body.getPosition().x)
+        if(Math.abs(playerPos - enemyPos) > 1400/ CrisisGame.PPM && b2body.getLinearVelocity().y == 0) {
+            if(b2body.getPosition().x < screen.mainPlayer.b2body.getPosition().x)
+                this.b2body.applyLinearImpulse(new Vector2(6f, 12f), new Vector2(0, 0), true);
+            else
+                this.b2body.applyLinearImpulse(new Vector2(-6f, 12f), new Vector2(0, 0), true);
+        }
+        if(Math.abs(playerPos - enemyPos) > 1200/ CrisisGame.PPM && b2body.getLinearVelocity().y == 0) {
+            if (screen.mainPlayer.b2body.getPosition().x > b2body.getPosition().x &&  b2body.getLinearVelocity().x <= 2)
+            {
                 this.b2body.setLinearVelocity(new Vector2(1.7f, 0));
+//                this.b2body.applyLinearImpulse(new Vector2(1f, 0), b2body.getWorldCenter(), true);
+            }
 
-            else if (screen.mainPlayer.b2body.getPosition().x < b2body.getPosition().x)
+            else if (screen.mainPlayer.b2body.getPosition().x < b2body.getPosition().x &&  b2body.getLinearVelocity().x >= -2) {
                 this.b2body.setLinearVelocity(new Vector2(-1.7f, 0f));
+//                this.b2body.applyLinearImpulse(new Vector2(1f, 0), b2body.getWorldCenter(), true);
+            }
         }
     }
 
-    public void playerBulletHit() {
+    public void enemyBulletHit() {
         bulletHitCount++;
-        if(bulletHitCount > 5) {
+        if(bulletHitCount > 15) {
             setToDestroy = true;
         }
     }

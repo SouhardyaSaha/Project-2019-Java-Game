@@ -220,9 +220,9 @@ public class MainPlayer extends Sprite {
         FixtureDef fdef = new FixtureDef();
 //        CircleShape shape = new CircleShape();
 //        shape.setRadius(130/ CrisisGame.PPM);
-        fdef.restitution = 0;
+        fdef.restitution = -3;
         fdef.filter.categoryBits = CrisisGame.PLAYER_BIT;
-        fdef.filter.maskBits =    CrisisGame.GROUND_BIT | CrisisGame.ACID_BIT | CrisisGame.OBJECT_BIT
+        fdef.filter.maskBits =    CrisisGame.GROUND_BIT | CrisisGame.OBJECT_BIT
                                 | CrisisGame.ENEMY_BIT | CrisisGame.ENEMY_BULLET_BIT;
 
         PolygonShape shape = new PolygonShape();

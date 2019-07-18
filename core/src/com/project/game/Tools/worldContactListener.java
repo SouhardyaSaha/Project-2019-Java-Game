@@ -2,6 +2,7 @@ package com.project.game.Tools;
 
 import com.badlogic.gdx.physics.box2d.*;
 import com.project.game.Characters.Enemy;
+import com.project.game.Characters.EnemyBoss;
 import com.project.game.Characters.MainPlayer;
 import com.project.game.CrisisGame;
 
@@ -25,8 +26,20 @@ public class worldContactListener implements ContactListener {
 
                 }
                 else {
-                    ( (Bullet)fixB.getUserData()).hitEnemy();
+                    ((Bullet)fixB.getUserData()).hitEnemy();
                     ((Enemy) fixA.getUserData()).enemyBulletHit();
+                }
+                break;
+            case CrisisGame.ENEMY_BOSS_BIT | CrisisGame.BULLET_BIT:
+
+                if(fixA.getFilterData().categoryBits == CrisisGame.BULLET_BIT){
+                    ((Bullet)fixA.getUserData()).hitEnemy();
+                    ((EnemyBoss) fixB.getUserData()).enemyBulletHit();
+
+                }
+                else {
+                    ((Bullet)fixB.getUserData()).hitEnemy();
+                    ((EnemyBoss) fixA.getUserData()).enemyBulletHit();
                 }
                 break;
 

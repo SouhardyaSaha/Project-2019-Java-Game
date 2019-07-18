@@ -68,7 +68,7 @@ public class PlayScreen implements Screen, InputProcessor{
         gameCam = new OrthographicCamera();
 
         ///creating viewport to maintain ratio
-        gamePort = new FillViewport(CrisisGame.v_WIDTH / CrisisGame.PPM * 1.6f, CrisisGame.v_HEIGHT /  CrisisGame.PPM * 1.4f, gameCam);
+        gamePort = new FillViewport(CrisisGame.v_WIDTH / CrisisGame.PPM * 1.8f, CrisisGame.v_HEIGHT /  CrisisGame.PPM * 1.4f, gameCam);
 
         ///HUD for scores/timers/level info
         hud = new Hud(game.batch);
@@ -140,8 +140,6 @@ public class PlayScreen implements Screen, InputProcessor{
     public void update(float dt){
         ///ajaira
         Gdx.input.setInputProcessor(this);
-        //handle user input first
-//        handleInput(dt);
 
         world.step(1/60f, 6, 2);
 
@@ -160,7 +158,7 @@ public class PlayScreen implements Screen, InputProcessor{
         }
 
         ///attach gameCam with players x co ordinate
-        gameCam.position.x = mainPlayer.b2body.getPosition().x;
+        gameCam.position.x = mainPlayer.b2body.getPosition().x ;
 //        gameCam.position.y = mainPlayer.b2body.getPosition().y;
 
         //update the gamecam with correct coordinates after changes

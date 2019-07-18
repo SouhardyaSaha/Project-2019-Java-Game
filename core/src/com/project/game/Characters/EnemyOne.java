@@ -136,7 +136,7 @@ public class EnemyOne extends Enemy {
         b2body = world.createBody(bdef);
 
         FixtureDef fdef = new FixtureDef();
-        fdef.restitution = 0;
+        fdef.restitution = -3;
         fdef.filter.categoryBits = CrisisGame.ENEMY_BIT;
         fdef.filter.maskBits =    CrisisGame.GROUND_BIT | CrisisGame.BULLET_BIT;
 
