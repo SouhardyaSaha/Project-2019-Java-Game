@@ -83,11 +83,11 @@ public class MainPlayer extends Sprite {
         playerDieing = new Animation(1f/20f, frames);
         frames.clear();
 
-        playerShooting = new TextureRegion(new Texture("Animations/Shooting/Shooting15.png"));
+        playerShooting = new TextureRegion(new Texture("Animations/shooting/Shooting15.png"));
 
         frames.clear();
 
-        playerStand = new TextureRegion(new Texture("Animations/Shooting/Shooting1.png"));
+        playerStand = new TextureRegion(new Texture("Animations/shooting/Shooting1.png"));
 
         defineMainPlayer();
         setBounds(0, 0, 600 / CrisisGame.PPM, 600 / CrisisGame.PPM);
@@ -228,12 +228,10 @@ public class MainPlayer extends Sprite {
         b2body = world.createBody(bdef);
 
         FixtureDef fdef = new FixtureDef();
-//        CircleShape shape = new CircleShape();
-//        shape.setRadius(130/ CrisisGame.PPM);
         fdef.restitution = -3;
         fdef.filter.categoryBits = CrisisGame.PLAYER_BIT;
         fdef.filter.maskBits =    CrisisGame.GROUND_BIT | CrisisGame.OBJECT_BIT
-                                | CrisisGame.ENEMY_BIT | CrisisGame.ENEMY_BULLET_BIT;
+                                | CrisisGame.ENEMY_BIT | CrisisGame.ENEMY_BULLET_BIT | CrisisGame.DOG_BIT;
 
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(70/ CrisisGame.PPM,200/ CrisisGame.PPM);

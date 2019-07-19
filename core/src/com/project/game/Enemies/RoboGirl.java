@@ -1,9 +1,10 @@
 package com.project.game.Enemies;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
@@ -13,40 +14,34 @@ import com.project.game.Tools.EnemyBullet;
 
 import java.util.ArrayList;
 
-public class EnemyBoss extends Sprite {
-
-    public enum State {FALLING, JUMPING, STANDING, RUNNING, SHOOTING}
+public class RoboGirl extends Enemy {
 
     public State currentState;
     public State previousState;
-
-    ///Enemy Bullets
-    ArrayList<EnemyBullet> bullets;
-
     public World world;
     public Body b2body;
-
+    public boolean walkingLeft;
+    public float bulletTimeCount;
+    public boolean fire;
+    ///Enemy Bullets
+    ArrayList<EnemyBullet> bullets;
+    PlayScreen screen;
     private TextureRegion region;
     private TextureRegion playerStand;
     private TextureRegion playerShooting;
     private Animation playerRun;
     private Animation playerJump;
+    private Animation playerFalling;
+//    public boolean shoot;
     private Animation playerDieing;
     private float stateTimer;
-    public boolean walkingLeft;
-//    public boolean shoot;
-
-    PlayScreen screen;
     private int bulletHitCount;
-    public float bulletTimeCount;
-    public boolean fire;
     private boolean setToDestroy, destroyed;
     private float posX, posY;
-
     private ParticleEffect particleEffect;
 
-    public EnemyBoss(PlayScreen screen, float posX, float posY) {
-//        super(screen.getAtlas().findRegion("robot4-walk8"));
+    public RoboGirl(PlayScreen screen, float posX, float posY) {
+        super(screen, posX, posY);
         this.posX = posX;
         this.posY = posY;
         this.world = screen.getWorld();
@@ -58,32 +53,31 @@ public class EnemyBoss extends Sprite {
         walkingLeft = true;
 
         Array<TextureRegion> frames = new Array<TextureRegion>();
-        for (int i = 0; i <= 16; i++) {
-            frames.add(new TextureRegion(new Texture("Animations/Enemies/Enemy Boss/walk/robot_9-walk" + i + ".png")));
+        for (int i = 0; i <= 32; i++) {
+            frames.add(new TextureRegion(new Texture("Animations/Enemies/robot11/walk/robot11-walk" + i + ".png")));
         }
-        playerRun = new Animation(1f / 16f, frames);
+        playerRun = new Animation(1f / 33f, frames);
         frames.clear();
 
         for (int i = 0; i <= 12; i++) {
-            frames.add(new TextureRegion(new Texture("Animations/Enemies/Enemy Boss/jump/enemy" + i + ".png")));
+            frames.add(new TextureRegion(new Texture("Animations/Enemies/Enemy Boss/jump/robot_9-jump" + i + ".png")));
         }
-        playerJump = new Animation(1f / 12f, frames);
+        playerJump = new Animation(1f / 30f, frames);
         frames.clear();
 
-        for (int i = 1; i <= 10; i++) {
-            frames.add(new TextureRegion(new Texture("Animations/Enemies/Enemy Boss/die/robot_9-die" + i + ".png")));
+        for (int i = 0; i <= 20; i++) {
+            frames.add(new TextureRegion(new Texture("Animations/Enemies/robot11/die/robot11-die" + i + ".png")));
         }
-        playerDieing = new Animation(1f / 10f, frames);
+        playerDieing = new Animation(1f / 20f, frames);
         frames.clear();
 
-        playerShooting = new TextureRegion(new Texture("Animations/Enemies/Enemy Boss/attack/robot_9-attack2.png"));
-
+        playerShooting = new TextureRegion(new Texture("Animations/Enemies/robot11/attack/robot11-attack12.png"));
         frames.clear();
 
-        playerStand = new TextureRegion(new Texture("Animations/Enemies/Enemy Boss/attack/robot_9-attack7.png"));
+        playerStand = new TextureRegion(new Texture("Animations/Enemies/robot11/attack/robot11-attack0.png"));
 
-        defineMainPlayer();
-        setBounds(0, 0, 1500 / CrisisGame.PPM, 1000 / CrisisGame.PPM / 1.2f);
+        defineEnemy();
+        setBounds(10, 10, 350 / CrisisGame.PPM, 410 / CrisisGame.PPM);
         setRegion(playerStand);
 
         bulletHitCount = 0;
@@ -125,7 +119,7 @@ public class EnemyBoss extends Sprite {
             if (fire) {
                 float bulletX = b2body.getPosition().x;
                 float bulletY = b2body.getPosition().y;
-                bullets.add(new EnemyBullet(screen, bulletX, bulletY, walkingLeft, 2));
+                bullets.add(new EnemyBullet(screen, bulletX, bulletY, walkingLeft, 1));
             }
 
         } else if (destroyed) {
@@ -158,11 +152,11 @@ public class EnemyBoss extends Sprite {
             case RUNNING:
                 Region = (TextureRegion) playerRun.getKeyFrame(stateTimer, true);
                 break;
-            case FALLING:
+            case Falling:
             case STANDING:
                 Region = playerStand;
                 break;
-            case SHOOTING:
+            case Shooting:
                 Region = playerShooting;
                 break;
             default:
@@ -170,10 +164,13 @@ public class EnemyBoss extends Sprite {
                 break;
         }
 
-        if (((b2body.getLinearVelocity().x > 0 || !walkingLeft ) && !Region.isFlipX() ) ) {
+        float playerPos = screen.mainPlayer.b2body.getPosition().x;
+        float enemyPos = b2body.getPosition().x;
+
+        if (((b2body.getLinearVelocity().x > 0 || !walkingLeft) && !Region.isFlipX())) {
             Region.flip(true, false);
             walkingLeft = false;
-        } else if ((b2body.getLinearVelocity().x < 0 || walkingLeft ) && Region.isFlipX() ) {
+        } else if ((b2body.getLinearVelocity().x < 0 || walkingLeft) && Region.isFlipX()) {
             Region.flip(true, false);
             walkingLeft = true;
         }
@@ -187,28 +184,32 @@ public class EnemyBoss extends Sprite {
         if (b2body.getLinearVelocity().y > 0 || (b2body.getLinearVelocity().y < 0 && previousState == State.JUMPING))
             return State.JUMPING;
         else if (b2body.getLinearVelocity().y < 0)
-            return State.FALLING;
+            return State.Falling;
         else if (b2body.getLinearVelocity().x != 0)
             return State.RUNNING;
-        else if (Gdx.input.isKeyPressed(Input.Keys.Z))
-            return State.SHOOTING;
+        else if (fire)
+            return State.Shooting;
         else
             return State.STANDING;
     }
 
-    public void defineMainPlayer() {
+    public void defineEnemy() {
         BodyDef bdef = new BodyDef();
         bdef.position.set(posX / CrisisGame.PPM, posY / CrisisGame.PPM);
         bdef.type = BodyDef.BodyType.DynamicBody;
+//        bdef.gravityScale = 5;
         b2body = world.createBody(bdef);
 
         FixtureDef fdef = new FixtureDef();
         fdef.restitution = -3;
-        fdef.filter.categoryBits = CrisisGame.ENEMY_BOSS_BIT;
+//        fdef.density = 3;
+        fdef.filter.categoryBits = CrisisGame.ENEMY_BIT;
         fdef.filter.maskBits = CrisisGame.GROUND_BIT | CrisisGame.BULLET_BIT;
 
+//        CircleShape shape = new CircleShape();
+//        shape.setRadius(600/ CrisisGame.PPM);
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(600 / CrisisGame.PPM, 400 / CrisisGame.PPM);
+        shape.setAsBox(60 / CrisisGame.PPM, 185 / CrisisGame.PPM);
 
 
         fdef.shape = shape;
@@ -230,13 +231,7 @@ public class EnemyBoss extends Sprite {
         float playerPos = screen.mainPlayer.b2body.getPosition().x;
         float enemyPos = b2body.getPosition().x;
 
-        if (Math.abs(playerPos - enemyPos) > 1400 / CrisisGame.PPM  &&  b2body.getLinearVelocity().y == 0) {
-            if (b2body.getPosition().x < screen.mainPlayer.b2body.getPosition().x)
-                this.b2body.applyLinearImpulse(new Vector2(6.5f, 12f), new Vector2(0, 0), true);
-            else
-                this.b2body.applyLinearImpulse(new Vector2(-6.5f, 12f), new Vector2(0, 0), true);
-        }
-        if (Math.abs(playerPos - enemyPos) > 1200 / CrisisGame.PPM && b2body.getLinearVelocity().y == 0) {
+        if (Math.abs(playerPos - enemyPos) > 500 / CrisisGame.PPM && b2body.getLinearVelocity().y == 0) {
             if (screen.mainPlayer.b2body.getPosition().x > b2body.getPosition().x && b2body.getLinearVelocity().x <= 2) {
                 this.b2body.setLinearVelocity(new Vector2(1.7f, 0));
             } else if (screen.mainPlayer.b2body.getPosition().x < b2body.getPosition().x && b2body.getLinearVelocity().x >= -2) {
@@ -247,9 +242,11 @@ public class EnemyBoss extends Sprite {
 
     public void enemyBulletHit() {
         bulletHitCount++;
-        if (bulletHitCount > 30) {
+        if (bulletHitCount > 5) {
             setToDestroy = true;
         }
     }
+
+    public enum State {Falling, JUMPING, STANDING, RUNNING, Shooting}
 
 }

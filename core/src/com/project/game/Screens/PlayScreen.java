@@ -1,7 +1,10 @@
 package com.project.game.Screens;
 
-import com.badlogic.gdx.*;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -9,57 +12,46 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.project.game.Enemies.EnemyBoss;
-import com.project.game.CrisisGame;
-import com.project.game.Enemies.Type1;
-import com.project.game.Scenes.Hud;
 import com.project.game.Characters.MainPlayer;
+import com.project.game.CrisisGame;
+import com.project.game.Enemies.Dog;
+import com.project.game.Enemies.EnemyBoss;
+import com.project.game.Enemies.MiddleEnemy;
+import com.project.game.Enemies.RoboGirl;
+import com.project.game.Scenes.Hud;
 import com.project.game.Tools.Box2dWorldCreator;
 import com.project.game.Tools.worldContactListener;
-import com.badlogic.gdx.graphics.GL20;
 
 
 public class PlayScreen implements Screen, InputProcessor {
 
+    ///MainPlayer
+    public MainPlayer mainPlayer;
+    public int level;
     // backGround
     private Texture backgroundImage;
-
-
     ///Game Reference
     private CrisisGame game;
-
-    private TextureAtlas atlas;
-
     private OrthographicCamera gameCam;
     private Viewport gamePort;
-
     //HUD
     private Hud hud;
-
     ///Tiled Map Variables
     private TiledMap map;
     private TmxMapLoader mapLoader;
     private OrthogonalTiledMapRenderer renderer;
-
     ///Box 2d variables
     private World world;
     private Box2DDebugRenderer b2dr;
-    Contact contact;
-
-    ///MainPlayer
-    public MainPlayer mainPlayer;
-
     ///Enemy
-    private Type1 type1;
+    private MiddleEnemy roboGirl;
     private EnemyBoss boss;
-
     ///Music
     private Music music;
-
-    public int level;
 
 
     public PlayScreen(CrisisGame game) {
@@ -78,7 +70,7 @@ public class PlayScreen implements Screen, InputProcessor {
 
         //Load map and setup map renderer
         mapLoader = new TmxMapLoader();
-        level = 1;
+        level = 2;
         switch (level) {
             case 1:
                 backgroundImage = new Texture("BG apocalyptic 3.png");
@@ -115,7 +107,7 @@ public class PlayScreen implements Screen, InputProcessor {
                 mainPlayer = new MainPlayer(this, 6500, 700);
 
                 ///creating enimies
-                type1 = new Type1(this, 2000, 700);
+                roboGirl = new MiddleEnemy(this, 6000, 700);
                 break;
             case 2:
                 //creating main character
@@ -131,10 +123,6 @@ public class PlayScreen implements Screen, InputProcessor {
         ///music controls
         music.setLooping(true);
         music.play();
-    }
-
-    public TextureAtlas getAtlas() {
-        return atlas;
     }
 
     @Override
@@ -154,7 +142,7 @@ public class PlayScreen implements Screen, InputProcessor {
                 ///main player update
                 mainPlayer.update(dt);
                 ///enemy update
-                type1.update(dt);
+                roboGirl.update(dt);
                 playerPos = mainPlayer.b2body.getPosition().x;
                 if (playerPos > 1300 / CrisisGame.PPM && playerPos < 7100 / CrisisGame.PPM)
                     gameCam.position.x = mainPlayer.b2body.getPosition().x;
@@ -201,7 +189,7 @@ public class PlayScreen implements Screen, InputProcessor {
         switch (level) {
             case 1:
                 mainPlayer.draw(game.batch);
-                type1.draw(game.batch);
+                roboGirl.draw(game.batch);
                 break;
             case 2:
                 boss.draw(game.batch);

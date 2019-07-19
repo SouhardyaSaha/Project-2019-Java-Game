@@ -3,14 +3,18 @@ package com.project.game.Enemies;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.project.game.CrisisGame;
 import com.project.game.Screens.PlayScreen;
+import com.project.game.Tools.EnemyBullet;
 
-public class Type2 extends Enemy {
+import java.util.ArrayList;
+
+public class MiddleEnemy extends Enemy {
 
     public State currentState;
     public State previousState;
@@ -19,19 +23,24 @@ public class Type2 extends Enemy {
     public boolean walkingLeft;
     public float bulletTimeCount;
     public boolean fire;
+    ///Enemy Bullets
+    ArrayList<EnemyBullet> bullets;
     PlayScreen screen;
     private TextureRegion region;
     private TextureRegion playerStand;
-    private Animation playerAttack;
     private Animation playerRun;
     private Animation playerJump;
+    private Animation playerShooting;
+    private Animation playerFalling;
+    //    public boolean shoot;
     private Animation playerDieing;
     private float stateTimer;
     private int bulletHitCount;
     private boolean setToDestroy, destroyed;
     private float posX, posY;
+    private ParticleEffect particleEffect;
 
-    public Type2(PlayScreen screen, float posX, float posY) {
+    public MiddleEnemy(PlayScreen screen, float posX, float posY) {
         super(screen, posX, posY);
         this.posX = posX;
         this.posY = posY;
@@ -44,34 +53,34 @@ public class Type2 extends Enemy {
         walkingLeft = true;
 
         Array<TextureRegion> frames = new Array<TextureRegion>();
-        for (int i = 0; i <= 32; i++) {
-            frames.add(new TextureRegion(new Texture("Animations/Enemies/robot11/walk/robot11-walk" + i + ".png")));
+        for (int i = 0; i <= 16; i++) {
+            frames.add(new TextureRegion(new Texture("Animations/Enemies/robot7/walk/robot_7-walk" + i + ".png")));
         }
-        playerRun = new Animation(1f / 32f, frames);
+        playerRun = new Animation(1f / 17f, frames);
+        frames.clear();
+
+        for (int i = 0; i <= 22; i++) {
+            frames.add(new TextureRegion(new Texture("Animations/Enemies/robot7/jump/robot_7-jump" + i + ".png")));
+        }
+        playerJump = new Animation(1f / 23f, frames);
         frames.clear();
 
         for (int i = 0; i <= 12; i++) {
-            frames.add(new TextureRegion(new Texture("Animations/Enemies/Enemy Boss/jump/robot_9-jump" + i + ".png")));
+            frames.add(new TextureRegion(new Texture("Animations/Enemies/robot7/die/robot_7-die" + i + ".png")));
         }
-        playerJump = new Animation(1f / 30f, frames);
-        frames.clear();
-
-        for (int i = 1; i <= 20; i++) {
-            frames.add(new TextureRegion(new Texture("Animations/Enemies/robot11/die/robot11-die" + i + ".png")));
-        }
-        playerDieing = new Animation(1f / 20f, frames);
+        playerDieing = new Animation(1f / 13f, frames);
         frames.clear();
 
         for (int i = 0; i <= 10; i++) {
-            frames.add(new TextureRegion(new Texture("Animations/Enemies/robot10/attack/robot10-attack" + i + ".png")));
+            frames.add(new TextureRegion(new Texture("Animations/Enemies/robot7/attack/robot_7-attack" + i + ".png")));
         }
-        playerAttack = new Animation(1f / 10f, frames);
+        playerShooting = new Animation(1f / 11f, frames);
         frames.clear();
 
-        playerStand = new TextureRegion(new Texture("Animations/Enemies/robot11/attack/robot11-attack0.png"));
+        playerStand = new TextureRegion(new Texture("Animations/Enemies/robot7/attack/robot_7-attack0.png"));
 
         defineEnemy();
-        setBounds(10, 10, 350 / CrisisGame.PPM, 410 / CrisisGame.PPM);
+        setBounds(10, 10, 600 / CrisisGame.PPM, 700 / CrisisGame.PPM);
         setRegion(playerStand);
 
         bulletHitCount = 0;
@@ -80,6 +89,12 @@ public class Type2 extends Enemy {
         destroyed = false;
         fire = true;
 
+        ///creating bullets
+        bullets = new ArrayList<EnemyBullet>();
+
+        //for particles
+        particleEffect = new ParticleEffect();
+//        particleEffect.load(Gdx.files.internal(""), Gdx.files.internal(""));
     }
 
     public void update(float dt) {
@@ -92,12 +107,23 @@ public class Type2 extends Enemy {
         } else if (!destroyed) {
             setEnemyMomentum();
             if (walkingLeft)
-                setPosition(b2body.getPosition().x - getWidth() / 2.2f, b2body.getPosition().y - getHeight() / 1.7f);
+                setPosition(b2body.getPosition().x - getWidth() / 2.2f, b2body.getPosition().y - getHeight() / 1.9f);
             else
-                setPosition(b2body.getPosition().x - getWidth() / 2f, b2body.getPosition().y - getHeight() / 1.7f);
+                setPosition(b2body.getPosition().x - getWidth() / 2f, b2body.getPosition().y - getHeight() / 1.9f);
 
             setRegion(getFrame(dt));
 
+            ///For Bullets
+            bulletTimeCount += dt;
+            if (bulletTimeCount > 0.5f) {
+                fire = true;
+                bulletTimeCount = 0;
+            } else fire = false;
+            if (fire) {
+                float bulletX = b2body.getPosition().x;
+                float bulletY = b2body.getPosition().y;
+                bullets.add(new EnemyBullet(screen, bulletX, bulletY, walkingLeft, 1));
+            }
 
         } else if (destroyed) {
             region = (TextureRegion) playerDieing.getKeyFrame(stateTimer, false);
@@ -105,6 +131,16 @@ public class Type2 extends Enemy {
             if (walkingLeft && region.isFlipX()) region.flip(true, false);
             setRegion(region);
         }
+
+        ///for bullets update
+        ArrayList<EnemyBullet> bulletToRemove = new ArrayList<EnemyBullet>();
+        for (EnemyBullet bullet : bullets) {
+            bullet.update(dt, fire);
+            if (bullet.remove) {
+                bulletToRemove.add(bullet);
+            }
+        }
+        bullets.removeAll(bulletToRemove);
     }
 
     public TextureRegion getFrame(float dt) {
@@ -124,12 +160,15 @@ public class Type2 extends Enemy {
                 Region = playerStand;
                 break;
             case Shooting:
-                Region = playerAttack;
+                Region = (TextureRegion) playerShooting.getKeyFrame(stateTimer, true);
                 break;
             default:
                 Region = playerStand;
                 break;
         }
+
+        float playerPos = screen.mainPlayer.b2body.getPosition().x;
+        float enemyPos = b2body.getPosition().x;
 
         if (((b2body.getLinearVelocity().x > 0 || !walkingLeft) && !Region.isFlipX())) {
             Region.flip(true, false);
@@ -165,11 +204,12 @@ public class Type2 extends Enemy {
 
         FixtureDef fdef = new FixtureDef();
         fdef.restitution = -3;
+//        fdef.density = 3;
         fdef.filter.categoryBits = CrisisGame.ENEMY_BIT;
         fdef.filter.maskBits = CrisisGame.GROUND_BIT | CrisisGame.BULLET_BIT;
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(60 / CrisisGame.PPM, 185 / CrisisGame.PPM);
+        shape.setAsBox(200 / CrisisGame.PPM, 300 / CrisisGame.PPM);
 
 
         fdef.shape = shape;
@@ -179,6 +219,11 @@ public class Type2 extends Enemy {
     public void draw(Batch batch) {
         if (!destroyed || stateTimer < 3)
             super.draw(batch);
+
+        ///bullet rendering
+        for (EnemyBullet bullet : bullets) {
+            bullet.draw(batch);
+        }
     }
 
     public void setEnemyMomentum() {

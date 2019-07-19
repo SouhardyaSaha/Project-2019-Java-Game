@@ -27,6 +27,7 @@ public class CrisisGame extends Game {
 	 public static final short BULLET_BIT = 32;
 	 public static final short ENEMY_BIT = 64;
 	 public static final short OBJECT_BIT = 128;
+	 public static final short DOG_BIT = 256;
 
 	 /// sprite batch for the game
 	public SpriteBatch batch;
@@ -44,8 +45,8 @@ public class CrisisGame extends Game {
 		manager.load("Sound Effects/zapsplat_science_fiction_weapon_gun_shoot_003_32196.mp3", Sound.class);
 		manager.finishLoading();
 
-		setScreen(new PlayScreen(this));
-//		setScreen(new MenuScreen(this));
+//		setScreen(new PlayScreen(this));
+		setScreen(new MenuScreen(this));
 	}
 
 	@Override
