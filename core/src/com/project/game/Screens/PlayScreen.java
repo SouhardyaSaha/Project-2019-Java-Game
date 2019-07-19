@@ -1,6 +1,7 @@
 package com.project.game.Screens;
 
 import com.badlogic.gdx.*;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -11,9 +12,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.project.game.Characters.EnemyBoss;
-import com.project.game.Characters.EnemyOne;
+import com.project.game.Enemies.EnemyBoss;
 import com.project.game.CrisisGame;
+import com.project.game.Enemies.Type1;
 import com.project.game.Scenes.Hud;
 import com.project.game.Characters.MainPlayer;
 import com.project.game.Tools.Box2dWorldCreator;
@@ -21,7 +22,7 @@ import com.project.game.Tools.worldContactListener;
 import com.badlogic.gdx.graphics.GL20;
 
 
-public class PlayScreen implements Screen, InputProcessor{
+public class PlayScreen implements Screen, InputProcessor {
 
     // backGround
     private Texture backgroundImage;
@@ -52,15 +53,16 @@ public class PlayScreen implements Screen, InputProcessor{
     public MainPlayer mainPlayer;
 
     ///Enemy
-    private EnemyOne type1;
+    private Type1 type1;
     private EnemyBoss boss;
+
+    ///Music
+    private Music music;
 
     public int level;
 
 
-    public  PlayScreen(CrisisGame game){
-        ///for animation
-//        atlas = new TextureAtlas("Animation/Main player/Walk/Main Player Walk.pack");
+    public PlayScreen(CrisisGame game) {
 
         this.game = game;
 
@@ -68,7 +70,7 @@ public class PlayScreen implements Screen, InputProcessor{
         gameCam = new OrthographicCamera();
 
         ///creating viewport to maintain ratio
-        gamePort = new FillViewport(CrisisGame.v_WIDTH / CrisisGame.PPM * 1.8f, CrisisGame.v_HEIGHT /  CrisisGame.PPM * 1.4f, gameCam);
+        gamePort = new FillViewport(CrisisGame.v_WIDTH / CrisisGame.PPM * 1.8f, CrisisGame.v_HEIGHT / CrisisGame.PPM * 1.4f, gameCam);
 
         ///HUD for scores/timers/level info
         hud = new Hud(game.batch);
@@ -76,15 +78,17 @@ public class PlayScreen implements Screen, InputProcessor{
 
         //Load map and setup map renderer
         mapLoader = new TmxMapLoader();
-        level = 2;
-        switch (level){
+        level = 1;
+        switch (level) {
             case 1:
                 backgroundImage = new Texture("BG apocalyptic 3.png");
+                music = CrisisGame.manager.get("Sound Effects/bensound-betterdays.mp3", Music.class);
                 map = mapLoader.load("Maps/Crisis.tmx");
                 break;
             case 2:
                 backgroundImage = new Texture("BG alien 4.jpg");
                 map = mapLoader.load("Maps/CrisisBoss.tmx");
+                music = CrisisGame.manager.get("Sound Effects/bensound-epic.mp3", Music.class);
                 break;
             default:
                 backgroundImage = new Texture("BG apocalyptic 3.png");
@@ -95,38 +99,41 @@ public class PlayScreen implements Screen, InputProcessor{
         renderer = new OrthogonalTiledMapRenderer(map, 1 / CrisisGame.PPM);
 
         //set the gamecam to start of the map
-        gameCam.position.set(gamePort.getWorldWidth()  / 1.5f , gamePort.getWorldHeight() / 1.7f , 0);
+        gameCam.position.set(gamePort.getWorldWidth() / 1.5f, gamePort.getWorldHeight() / 1.7f, 0);
 
         //Box2d World setting the gravity
-        world = new World(new Vector2(0,-15), true);
+        world = new World(new Vector2(0, -15), true);
 
         //allow the debug lines of box2d
         b2dr = new Box2DDebugRenderer();
 
         new Box2dWorldCreator(this);
 
-        switch (level)
-        {
+        switch (level) {
             case 1:
                 //creating main character
-                mainPlayer = new MainPlayer(this, 1000, 700);
+                mainPlayer = new MainPlayer(this, 6500, 700);
 
                 ///creating enimies
-                type1 = new EnemyOne(this, 2000, 700);
+                type1 = new Type1(this, 2000, 700);
                 break;
             case 2:
                 //creating main character
-                mainPlayer = new MainPlayer(this, 1000, 700);
-                boss = new EnemyBoss(this, 1200f, 700f);
+                mainPlayer = new MainPlayer(this, 2000, 700);
+                boss = new EnemyBoss(this, 4000, 700f);
                 ///creating enimies
                 break;
         }
 
         ///for collision detection
         world.setContactListener(new worldContactListener());
+
+        ///music controls
+        music.setLooping(true);
+        music.play();
     }
 
-    public TextureAtlas getAtlas(){
+    public TextureAtlas getAtlas() {
         return atlas;
     }
 
@@ -136,30 +143,31 @@ public class PlayScreen implements Screen, InputProcessor{
     }
 
 
-
-    public void update(float dt){
+    public void update(float dt) {
         ///ajaira
         Gdx.input.setInputProcessor(this);
 
-        world.step(1/60f, 6, 2);
-
-        switch (level){
+        world.step(1 / 60f, 6, 2);
+        float playerPos;
+        switch (level) {
             case 1:
                 ///main player update
                 mainPlayer.update(dt);
                 ///enemy update
                 type1.update(dt);
+                playerPos = mainPlayer.b2body.getPosition().x;
+                if (playerPos > 1300 / CrisisGame.PPM && playerPos < 7100 / CrisisGame.PPM)
+                    gameCam.position.x = mainPlayer.b2body.getPosition().x;
                 break;
             case 2:
                 ///main player update
                 mainPlayer.update(dt);
                 boss.update(dt);
+                playerPos = mainPlayer.b2body.getPosition().x;
+                if (playerPos > 1361 / CrisisGame.PPM && playerPos < 6500 / CrisisGame.PPM)
+                    gameCam.position.x = mainPlayer.b2body.getPosition().x;
                 break;
         }
-
-        ///attach gameCam with players x co ordinate
-        gameCam.position.x = mainPlayer.b2body.getPosition().x ;
-//        gameCam.position.y = mainPlayer.b2body.getPosition().y;
 
         //update the gamecam with correct coordinates after changes
         gameCam.update();
@@ -178,19 +186,19 @@ public class PlayScreen implements Screen, InputProcessor{
 
         ///render background
         game.batch.begin();
-        game.batch.draw(backgroundImage, 0,0, 1600/2f, 1100/2f);
+        game.batch.draw(backgroundImage, 0, 0, 1600 / 2f, 1100 / 2f);
         game.batch.end();
 
         //render gameMap
         renderer.render();
 
         //renderer box2DDebugelines
-//        b2dr.render(world, gameCam.combined);
+        b2dr.render(world, gameCam.combined);
 
         ///
         game.batch.setProjectionMatrix(gameCam.combined);
         game.batch.begin();
-        switch (level){
+        switch (level) {
             case 1:
                 mainPlayer.draw(game.batch);
                 type1.draw(game.batch);
@@ -211,13 +219,14 @@ public class PlayScreen implements Screen, InputProcessor{
     @Override
     public void resize(int width, int height) {
 
-        gamePort.update(width , height );
+        gamePort.update(width, height);
     }
 
-    public TiledMap getMap(){
+    public TiledMap getMap() {
         return map;
     }
-    public  World getWorld(){
+
+    public World getWorld() {
         return world;
     }
 
@@ -247,7 +256,7 @@ public class PlayScreen implements Screen, InputProcessor{
 
     @Override
     public boolean keyDown(int keycode) {
-            return false;
+        return false;
     }
 
     @Override
@@ -277,7 +286,7 @@ public class PlayScreen implements Screen, InputProcessor{
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        System.out.println(screenX +" "+(Gdx.graphics.getHeight() - 1 -screenY));
+        System.out.println(screenX + " " + (Gdx.graphics.getHeight() - 1 - screenY));
         return false;
     }
 

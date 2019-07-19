@@ -2,6 +2,7 @@ package com.project.game.Characters;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -33,7 +34,7 @@ public class MainPlayer extends Sprite {
     private TextureRegion playerShooting;
     private Animation playerRun;
     private Animation playerJump;
-    private Animation playerFalling;
+    private Animation playerFall;
     private Animation playerDieing;
     private float stateTimer;
     public boolean walkingLeft;
@@ -45,7 +46,6 @@ public class MainPlayer extends Sprite {
     private boolean setToDestroy, destroyed;
 
     public MainPlayer(PlayScreen screen, float posX, float posY){
-//        super(screen.getAtlas().findRegion("robot4-walk8"));
 
         this.posX = posX;
         this.posY = posY;
@@ -65,10 +65,16 @@ public class MainPlayer extends Sprite {
         playerRun = new Animation(1f/32f, frames);
         frames.clear();
 
-        for (int i = 0; i<=30; i++){
-            frames.add(new TextureRegion(new Texture("Animations/jump/robot4-jump" + i + ".png")));
+        for (int i = 0; i<=12; i++){
+            frames.add(new TextureRegion(new Texture("Animations/jump/jump" + i + ".png")));
         }
-        playerJump = new Animation(1f/30f, frames);
+        playerJump = new Animation(1f/24f, frames);
+        frames.clear();
+
+        for (int i = 13; i<=30; i++){
+            frames.add(new TextureRegion(new Texture("Animations/jump/jump" + i + ".png")));
+        }
+        playerFall = new Animation(1f/26f, frames);
         frames.clear();
 
         for (int i = 1; i<=20; i++){
@@ -84,7 +90,7 @@ public class MainPlayer extends Sprite {
         playerStand = new TextureRegion(new Texture("Animations/Shooting/Shooting1.png"));
 
         defineMainPlayer();
-        setBounds(0, 0, 500 / CrisisGame.PPM, 500 / CrisisGame.PPM);
+        setBounds(0, 0, 600 / CrisisGame.PPM, 600 / CrisisGame.PPM);
         setRegion(playerStand);
 
         bulletHitCount = 0;
@@ -144,6 +150,8 @@ public class MainPlayer extends Sprite {
                 Region = (TextureRegion) playerRun.getKeyFrame(stateTimer, true);
                 break;
             case Falling:
+                Region = (TextureRegion) playerFall.getKeyFrame(stateTimer, false);
+                break;
             case STANDING:
                 Region = playerStand;
                 break;
@@ -188,7 +196,9 @@ public class MainPlayer extends Sprite {
             float bulletX = b2body.getPosition().x ;
             float bulletY = b2body.getPosition().y;
             bullets.add(new Bullet(screen, bulletX, bulletY, walkingLeft));
-            System.out.println("Shoot");
+
+            ///for bullet sound
+            CrisisGame.manager.get("Sound Effects/zapsplat_science_fiction_weapon_gun_shoot_003_32196.mp3", Sound.class).play();
         }
 
         if(b2body.getLinearVelocity().y == 0 &&  Gdx.input.isKeyJustPressed(Input.Keys.UP)){
@@ -226,7 +236,7 @@ public class MainPlayer extends Sprite {
                                 | CrisisGame.ENEMY_BIT | CrisisGame.ENEMY_BULLET_BIT;
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(60/ CrisisGame.PPM,185/ CrisisGame.PPM);
+        shape.setAsBox(70/ CrisisGame.PPM,200/ CrisisGame.PPM);
 
 
         fdef.shape = shape;

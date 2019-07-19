@@ -1,0 +1,12 @@
+
+button.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Gradient-Button-PNG
+  rotate: false
+  xy: 1, 1
+  size: 132, 33
+  orig: 132, 33
+  offset: 0, 0
+  index: -1
