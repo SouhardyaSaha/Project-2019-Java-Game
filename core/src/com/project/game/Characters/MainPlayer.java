@@ -183,7 +183,7 @@ public class MainPlayer extends Sprite {
     }
 
     public void handleInput(float dt){
-
+        ///bullet
         if(Gdx.input.isKeyJustPressed(Input.Keys.CONTROL_LEFT)){
             float bulletX = b2body.getPosition().x ;
             float bulletY = b2body.getPosition().y;

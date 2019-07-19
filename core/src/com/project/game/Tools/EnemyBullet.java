@@ -29,12 +29,14 @@ public class EnemyBullet extends Sprite {
 
     public float x, y;
     public boolean remove = false;
+    public boolean shoot = false;
+    public int bulletType;
 
-    public EnemyBullet(PlayScreen screen, float x, float y, boolean fireRight) {
+    public EnemyBullet(PlayScreen screen, float x, float y, boolean fireRight, int bulletType) {
         this.x = x + 0.5f;
         this.y = y + 0.25f;
+        this.bulletType  = bulletType;
         right = fireRight;
-
         this.screen = screen;
         this.world = screen.getWorld();
 
@@ -54,7 +56,7 @@ public class EnemyBullet extends Sprite {
 //        this.world = super.world;
     }
 
-    public void update(float dt){
+    public void update(float dt, boolean shoot){
 
 //        if (!right)  x += speed * dt;
 //        else x -= speed * dt;
@@ -72,9 +74,7 @@ public class EnemyBullet extends Sprite {
             setRegion(bulletRegion);
 //            b2body.setTransform(new Vector2(screen.mainPlayer.b2body.getPosition().x,screen.mainPlayer.b2body.getPosition().y), screen.mainPlayer.b2body.getAngle());
 
-
-
-            if(Gdx.input.isKeyPressed(Input.Keys.Z)){
+            if(shoot){
                 if(!right)
                     b2body.applyLinearImpulse(new Vector2(5, -2), b2body.getWorldCenter(), true);
                 else

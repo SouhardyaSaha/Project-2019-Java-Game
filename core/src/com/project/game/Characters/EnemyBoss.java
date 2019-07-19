@@ -19,7 +19,8 @@ import java.util.ArrayList;
 
 public class EnemyBoss extends Sprite {
 
-    public enum State { Falling, JUMPING, STANDING, RUNNING, Shooting}
+    public enum State {Falling, JUMPING, STANDING, RUNNING, Shooting}
+
     public State currentState;
     public State previousState;
 
@@ -42,11 +43,13 @@ public class EnemyBoss extends Sprite {
 
     PlayScreen screen;
     private int bulletHitCount;
+    public float bulletTimeCount;
+    public boolean fire;
     private boolean setToDestroy, destroyed;
 
     private float posX, posY;
 
-    public EnemyBoss(PlayScreen screen, float posX, float posY){
+    public EnemyBoss(PlayScreen screen, float posX, float posY) {
 //        super(screen.getAtlas().findRegion("robot4-walk8"));
         this.posX = posX;
         this.posY = posY;
@@ -60,22 +63,22 @@ public class EnemyBoss extends Sprite {
 //        shoot = false;
 
         Array<TextureRegion> frames = new Array<TextureRegion>();
-        for(int i = 0; i<=16; i++){
+        for (int i = 0; i <= 16; i++) {
             frames.add(new TextureRegion(new Texture("Animations/Enemies/Enemy Boss/walk/robot_9-walk" + i + ".png")));
         }
-        playerRun = new Animation(1f/16f, frames);
+        playerRun = new Animation(1f / 16f, frames);
         frames.clear();
 
-        for (int i = 0; i<=12; i++){
+        for (int i = 0; i <= 12; i++) {
             frames.add(new TextureRegion(new Texture("Animations/Enemies/Enemy Boss/jump/robot_9-jump" + i + ".png")));
         }
-        playerJump = new Animation(1f/30f, frames);
+        playerJump = new Animation(1f / 30f, frames);
         frames.clear();
 
-        for (int i = 1; i<=10; i++){
+        for (int i = 1; i <= 10; i++) {
             frames.add(new TextureRegion(new Texture("Animations/Enemies/Enemy Boss/die/robot_9-die" + i + ".png")));
         }
-        playerDieing = new Animation(1f/20f, frames);
+        playerDieing = new Animation(1f / 20f, frames);
         frames.clear();
 
         playerShooting = new TextureRegion(new Texture("Animations/Enemies/Enemy Boss/attack/robot_9-attack2.png"));
@@ -89,64 +92,72 @@ public class EnemyBoss extends Sprite {
         setRegion(playerStand);
 
         bulletHitCount = 0;
+        bulletTimeCount = 0;
         setToDestroy = false;
         destroyed = false;
+        fire = true;
 
         ///creating bullets
         bullets = new ArrayList<EnemyBullet>();
     }
 
-    public  void update(float dt){
+    public void update(float dt) {
 
-        if(destroyed) stateTimer+=dt;
-        if(setToDestroy && !destroyed){
+        if (destroyed) stateTimer += dt;
+        if (setToDestroy && !destroyed) {
             world.destroyBody(b2body);
             destroyed = true;
             stateTimer = 0;
-        }
-        else if (!destroyed){
+        } else if (!destroyed) {
 //            handleInput(dt);
             setEnemyMomentum();
-            if(walkingLeft)
-                setPosition(b2body.getPosition().x - getWidth() / 2.2f, b2body.getPosition().y - getHeight() / 1.7f );
+            if (walkingLeft)
+                setPosition(b2body.getPosition().x - getWidth() / 2.2f, b2body.getPosition().y - getHeight() / 1.7f);
             else
-                setPosition(b2body.getPosition().x - getWidth() / 2f, b2body.getPosition().y - getHeight() / 1.7f );
+                setPosition(b2body.getPosition().x - getWidth() / 2f, b2body.getPosition().y - getHeight() / 1.7f);
 
             setRegion(getFrame(dt));
 
+
             ///For Bullets
-            if(Gdx.input.isKeyJustPressed(Input.Keys.Z)){
-                float bulletX = b2body.getPosition().x ;
+            bulletTimeCount += dt;
+//            System.out.println(dt);
+            System.out.println("Enemy boss bullet time: " + bulletTimeCount);
+            if (bulletTimeCount > 0.5f) {
+                fire = true;
+                bulletTimeCount = 0;
+            } else fire = false;
+            if (fire) {
+                float bulletX = b2body.getPosition().x;
                 float bulletY = b2body.getPosition().y;
-                bullets.add(new EnemyBullet(screen, bulletX, bulletY, walkingLeft));
+                bullets.add(new EnemyBullet(screen, bulletX, bulletY, walkingLeft, 2));
                 System.out.println("Enemy Boss Shoot");
             }
 
-        }
-        else if (destroyed){
+        } else if (destroyed) {
             region = (TextureRegion) playerDieing.getKeyFrame(stateTimer, false);
-            if(!walkingLeft && !region.isFlipX()) region.flip(true,false);
-            if(walkingLeft && region.isFlipX()) region.flip(true,false);
+            if (!walkingLeft && !region.isFlipX()) region.flip(true, false);
+            if (walkingLeft && region.isFlipX()) region.flip(true, false);
             setRegion(region);
         }
 
         ///for bullets update
         ArrayList<EnemyBullet> bulletToRemove = new ArrayList<EnemyBullet>();
-        for(EnemyBullet bullet : bullets){
-            bullet.update(dt);
-            if(bullet.remove){
+        for (EnemyBullet bullet : bullets) {
+            bullet.update(dt, fire);
+            if (bullet.remove) {
                 bulletToRemove.add(bullet);
             }
         }
         bullets.removeAll(bulletToRemove);
     }
 
-    public TextureRegion getFrame(float dt){
+    public TextureRegion getFrame(float dt) {
         currentState = getState();
 
         TextureRegion Region;
 
-        switch (currentState){
+        switch (currentState) {
             case JUMPING:
                 Region = (TextureRegion) playerJump.getKeyFrame(stateTimer, false);
                 break;
@@ -165,11 +176,10 @@ public class EnemyBoss extends Sprite {
                 break;
         }
 
-        if ((b2body.getLinearVelocity().x > 0 || !walkingLeft) && !Region.isFlipX() ){
+        if ((b2body.getLinearVelocity().x > 0 || !walkingLeft) && !Region.isFlipX()) {
             Region.flip(true, false);
             walkingLeft = false;
-        }
-        else if ((b2body.getLinearVelocity().x < 0 || walkingLeft) && Region.isFlipX()){
+        } else if ((b2body.getLinearVelocity().x < 0 || walkingLeft) && Region.isFlipX()) {
             Region.flip(true, false);
             walkingLeft = true;
         }
@@ -179,8 +189,8 @@ public class EnemyBoss extends Sprite {
         return Region;
     }
 
-    public State getState(){
-        if(b2body.getLinearVelocity().y > 0 || (b2body.getLinearVelocity().y < 0 && previousState == State.JUMPING))
+    public State getState() {
+        if (b2body.getLinearVelocity().y > 0 || (b2body.getLinearVelocity().y < 0 && previousState == State.JUMPING))
             return State.JUMPING;
         else if (b2body.getLinearVelocity().y < 0)
             return State.Falling;
@@ -192,9 +202,9 @@ public class EnemyBoss extends Sprite {
             return State.STANDING;
     }
 
-    public void defineMainPlayer(){
+    public void defineMainPlayer() {
         BodyDef bdef = new BodyDef();
-        bdef.position.set(posX/ CrisisGame.PPM,posY/ CrisisGame.PPM);
+        bdef.position.set(posX / CrisisGame.PPM, posY / CrisisGame.PPM);
         bdef.type = BodyDef.BodyType.DynamicBody;
 //        bdef.gravityScale = 5;
         b2body = world.createBody(bdef);
@@ -203,46 +213,43 @@ public class EnemyBoss extends Sprite {
         fdef.restitution = -3;
 //        fdef.density = 3;
         fdef.filter.categoryBits = CrisisGame.ENEMY_BOSS_BIT;
-        fdef.filter.maskBits =  CrisisGame.GROUND_BIT | CrisisGame.BULLET_BIT;
+        fdef.filter.maskBits = CrisisGame.GROUND_BIT | CrisisGame.BULLET_BIT;
 
 //        CircleShape shape = new CircleShape();
 //        shape.setRadius(600/ CrisisGame.PPM);
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(600/ CrisisGame.PPM,500/ CrisisGame.PPM);
+        shape.setAsBox(600 / CrisisGame.PPM, 500 / CrisisGame.PPM);
 
 
         fdef.shape = shape;
         b2body.createFixture(fdef).setUserData(this);
     }
 
-    public void draw(Batch batch){
-        if(!destroyed || stateTimer < 3)
+    public void draw(Batch batch) {
+        if (!destroyed || stateTimer < 3)
             super.draw(batch);
 
         ///bullet rendering
-        for (EnemyBullet bullet : bullets){
+        for (EnemyBullet bullet : bullets) {
             bullet.draw(batch);
         }
     }
 
-    public void setEnemyMomentum(){
+    public void setEnemyMomentum() {
 
         float playerPos = screen.mainPlayer.b2body.getPosition().x;
         float enemyPos = b2body.getPosition().x;
-        if(Math.abs(playerPos - enemyPos) > 1400/ CrisisGame.PPM && b2body.getLinearVelocity().y == 0) {
-            if(b2body.getPosition().x < screen.mainPlayer.b2body.getPosition().x)
+        if (Math.abs(playerPos - enemyPos) > 1400 / CrisisGame.PPM && b2body.getLinearVelocity().y == 0) {
+            if (b2body.getPosition().x < screen.mainPlayer.b2body.getPosition().x)
                 this.b2body.applyLinearImpulse(new Vector2(6f, 12f), new Vector2(0, 0), true);
             else
                 this.b2body.applyLinearImpulse(new Vector2(-6f, 12f), new Vector2(0, 0), true);
         }
-        if(Math.abs(playerPos - enemyPos) > 1200/ CrisisGame.PPM && b2body.getLinearVelocity().y == 0) {
-            if (screen.mainPlayer.b2body.getPosition().x > b2body.getPosition().x &&  b2body.getLinearVelocity().x <= 2)
-            {
+        if (Math.abs(playerPos - enemyPos) > 1200 / CrisisGame.PPM && b2body.getLinearVelocity().y == 0) {
+            if (screen.mainPlayer.b2body.getPosition().x > b2body.getPosition().x && b2body.getLinearVelocity().x <= 2) {
                 this.b2body.setLinearVelocity(new Vector2(1.7f, 0));
 //                this.b2body.applyLinearImpulse(new Vector2(1f, 0), b2body.getWorldCenter(), true);
-            }
-
-            else if (screen.mainPlayer.b2body.getPosition().x < b2body.getPosition().x &&  b2body.getLinearVelocity().x >= -2) {
+            } else if (screen.mainPlayer.b2body.getPosition().x < b2body.getPosition().x && b2body.getLinearVelocity().x >= -2) {
                 this.b2body.setLinearVelocity(new Vector2(-1.7f, 0f));
 //                this.b2body.applyLinearImpulse(new Vector2(1f, 0), b2body.getWorldCenter(), true);
             }
@@ -251,7 +258,7 @@ public class EnemyBoss extends Sprite {
 
     public void enemyBulletHit() {
         bulletHitCount++;
-        if(bulletHitCount > 15) {
+        if (bulletHitCount > 15) {
             setToDestroy = true;
         }
     }

@@ -60,7 +60,7 @@ public class PlayScreen implements Screen, InputProcessor{
 
     public  PlayScreen(CrisisGame game){
         ///for animation
-        atlas = new TextureAtlas("Animation/Main player/Walk/Main Player Walk.pack");
+//        atlas = new TextureAtlas("Animation/Main player/Walk/Main Player Walk.pack");
 
         this.game = game;
 
@@ -185,7 +185,7 @@ public class PlayScreen implements Screen, InputProcessor{
         renderer.render();
 
         //renderer box2DDebugelines
-        b2dr.render(world, gameCam.combined);
+//        b2dr.render(world, gameCam.combined);
 
         ///
         game.batch.setProjectionMatrix(gameCam.combined);

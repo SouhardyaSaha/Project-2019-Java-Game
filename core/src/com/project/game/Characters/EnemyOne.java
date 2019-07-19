@@ -34,6 +34,8 @@ public class EnemyOne extends Enemy {
     private Animation dieAnimation;
     private Array<TextureRegion> frames;
     private int bulletHitCount;
+    public boolean fire;
+    public int bulletTimeCount;
 
     boolean setToDestroy, destroyed;
 
@@ -101,11 +103,16 @@ public class EnemyOne extends Enemy {
             setVelocity();
 
 
-            if(Gdx.input.isKeyJustPressed(Input.Keys.Z)){
+            bulletTimeCount += dt;
+            if (bulletTimeCount > 2) {
+                fire = true;
+                bulletTimeCount = 0;
+            } else fire = false;
+            if (fire) {
                 float bulletX = b2body.getPosition().x;
                 float bulletY = b2body.getPosition().y;
-                bullets.add(new EnemyBullet(screen, bulletX, bulletY, walkingLeft));
-                System.out.println("Enemy Shoot");
+                bullets.add(new EnemyBullet(screen, bulletX, bulletY, walkingLeft, 2));
+                System.out.println("Enemy Boss Shoot");
             }
         }
         else if(destroyed){
@@ -119,7 +126,7 @@ public class EnemyOne extends Enemy {
         ///for bullets update
         ArrayList<EnemyBullet> bulletToRemove = new ArrayList<EnemyBullet>();
         for(EnemyBullet bullet : bullets){
-            bullet.update(dt);
+            bullet.update(dt, fire);
             if(bullet.remove){
                 bulletToRemove.add(bullet);
             }
