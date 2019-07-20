@@ -39,6 +39,7 @@ public class RoboGirl extends Enemy {
     private boolean setToDestroy, destroyed;
     private float posX, posY;
     private ParticleEffect particleEffect;
+    private boolean fireTime;
 
     public RoboGirl(PlayScreen screen, float posX, float posY) {
         super(screen, posX, posY);
@@ -59,11 +60,11 @@ public class RoboGirl extends Enemy {
         playerRun = new Animation(1f / 33f, frames);
         frames.clear();
 
-        for (int i = 0; i <= 12; i++) {
-            frames.add(new TextureRegion(new Texture("Animations/Enemies/Enemy Boss/jump/robot_9-jump" + i + ".png")));
-        }
-        playerJump = new Animation(1f / 30f, frames);
-        frames.clear();
+//        for (int i = 0; i <= 12; i++) {
+//            frames.add(new TextureRegion(new Texture("Animations/Enemies/Enemy Boss/jump/robot_9-jump" + i + ".png")));
+//        }
+//        playerJump = new Animation(1f / 30f, frames);
+//        frames.clear();
 
         for (int i = 0; i <= 20; i++) {
             frames.add(new TextureRegion(new Texture("Animations/Enemies/robot11/die/robot11-die" + i + ".png")));
@@ -92,6 +93,9 @@ public class RoboGirl extends Enemy {
         //for particles
         particleEffect = new ParticleEffect();
 //        particleEffect.load(Gdx.files.internal(""), Gdx.files.internal(""));
+
+//        b2body.setActive(false);
+        fireTime = false;
     }
 
     public void update(float dt) {
@@ -102,6 +106,7 @@ public class RoboGirl extends Enemy {
             destroyed = true;
             stateTimer = 0;
         } else if (!destroyed) {
+            if(b2body.getPosition().x < screen.mainPlayer.b2body.getPosition().x + 50f) fireTime = true;
             setEnemyMomentum();
             if (walkingLeft)
                 setPosition(b2body.getPosition().x - getWidth() / 2.2f, b2body.getPosition().y - getHeight() / 1.7f);
@@ -112,11 +117,11 @@ public class RoboGirl extends Enemy {
 
             ///For Bullets
             bulletTimeCount += dt;
-            if (bulletTimeCount > 0.5f) {
+            if (bulletTimeCount > 1f) {
                 fire = true;
                 bulletTimeCount = 0;
             } else fire = false;
-            if (fire) {
+            if (fire && fireTime) {
                 float bulletX = b2body.getPosition().x;
                 float bulletY = b2body.getPosition().y;
                 bullets.add(new EnemyBullet(screen, bulletX, bulletY, walkingLeft, 1));
@@ -146,9 +151,9 @@ public class RoboGirl extends Enemy {
         TextureRegion Region;
 
         switch (currentState) {
-            case JUMPING:
-                Region = (TextureRegion) playerJump.getKeyFrame(stateTimer, false);
-                break;
+//            case JUMPING:
+//                Region = (TextureRegion) playerJump.getKeyFrame(stateTimer, false);
+//                break;
             case RUNNING:
                 Region = (TextureRegion) playerRun.getKeyFrame(stateTimer, true);
                 break;

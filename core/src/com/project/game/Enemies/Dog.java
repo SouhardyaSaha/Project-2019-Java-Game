@@ -80,6 +80,8 @@ public class Dog extends Enemy {
         destroyed = false;
         attack = true;
 
+//        b2body.setActive(false);
+
     }
 
     public void update(float dt) {
@@ -192,12 +194,12 @@ public class Dog extends Enemy {
         float playerPos = screen.mainPlayer.b2body.getPosition().x;
         float enemyPos = b2body.getPosition().x;
 
-        if (Math.abs(playerPos - enemyPos) > 500 / CrisisGame.PPM && b2body.getLinearVelocity().y == 0) {
-            if (b2body.getPosition().x < screen.mainPlayer.b2body.getPosition().x)
-                this.b2body.applyLinearImpulse(new Vector2(3.5f, 8f), new Vector2(0, 0), true);
-            else
-                this.b2body.applyLinearImpulse(new Vector2(-3.5f, 8f), new Vector2(0, 0), true);
-        }
+//        if (Math.abs(playerPos - enemyPos) > 500 / CrisisGame.PPM && b2body.getLinearVelocity().y == 0) {
+//            if (b2body.getPosition().x < screen.mainPlayer.b2body.getPosition().x)
+//                this.b2body.applyLinearImpulse(new Vector2(3.5f, 8f), new Vector2(0, 0), true);
+//            else
+//                this.b2body.applyLinearImpulse(new Vector2(-3.5f, 8f), new Vector2(0, 0), true);
+//        }
         if (Math.abs(playerPos - enemyPos) > 200 / CrisisGame.PPM && b2body.getLinearVelocity().y == 0) {
             if (screen.mainPlayer.b2body.getPosition().x > b2body.getPosition().x && b2body.getLinearVelocity().x <= 2) {
                 this.b2body.setLinearVelocity(new Vector2(1.7f, 0));

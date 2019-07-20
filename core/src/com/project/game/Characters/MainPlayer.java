@@ -207,11 +207,11 @@ public class MainPlayer extends Sprite {
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) && b2body.getLinearVelocity().x <= 2){
-            b2body.applyLinearImpulse(new Vector2(0.3f, 0), b2body.getWorldCenter(),true);
+            b2body.applyLinearImpulse(new Vector2(0.5f, 0), b2body.getWorldCenter(),true);
 //            gameCam.position.x += 100 * dt;
         }
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT) && b2body.getLinearVelocity().x >= -2){
-            b2body.applyLinearImpulse(new Vector2(-0.3f, 0), b2body.getWorldCenter(),true);
+            b2body.applyLinearImpulse(new Vector2(-0.5f, 0), b2body.getWorldCenter(),true);
 //            gameCam.position.x -= 100 * dt;
         }
         if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
@@ -253,7 +253,7 @@ public class MainPlayer extends Sprite {
 
     public void playerBulletHit() {
         bulletHitCount++;
-        if(bulletHitCount > 5) {
+        if(bulletHitCount > 50) {
             setToDestroy = true;
         }
     }

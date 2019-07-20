@@ -3,6 +3,7 @@ package com.project.game.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -19,6 +20,7 @@ public class About implements Screen {
     private TextButton buttonBack;
     private BitmapFont fontWhite;
     CrisisGame game;
+    private Texture backGround;
 
     public About(SpriteBatch batch, BitmapFont fontWhite, Skin skin, TextButton buttonBack, CrisisGame game) {
         this.batch = batch;
@@ -26,6 +28,7 @@ public class About implements Screen {
         this.skin = skin;
         this.buttonBack = buttonBack;
         this.game = game;
+        backGround = new Texture("About.png");
     }
 
     @Override
@@ -45,6 +48,10 @@ public class About implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        batch.begin();
+        batch.draw(backGround, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        batch.end();
 
         stage.act(delta);
         stage.draw();

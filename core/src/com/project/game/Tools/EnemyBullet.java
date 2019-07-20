@@ -81,9 +81,9 @@ public class EnemyBullet extends Sprite {
                         break;
                     case 2:
                         if (!right)
-                            b2body.applyLinearImpulse(new Vector2(7, -1), b2body.getWorldCenter(), true);
+                            b2body.applyLinearImpulse(new Vector2(6, -1.5f), b2body.getWorldCenter(), true);
                         else
-                            b2body.applyLinearImpulse(new Vector2(-7, -1), b2body.getWorldCenter(), true);
+                            b2body.applyLinearImpulse(new Vector2(-6, -1.5f), b2body.getWorldCenter(), true);
                         break;
 
                 }

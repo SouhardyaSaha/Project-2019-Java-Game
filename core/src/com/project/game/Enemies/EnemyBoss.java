@@ -13,7 +13,7 @@ import com.project.game.Tools.EnemyBullet;
 
 import java.util.ArrayList;
 
-public class EnemyBoss extends Sprite {
+public class EnemyBoss extends Enemy {
 
     public enum State {FALLING, JUMPING, STANDING, RUNNING, SHOOTING}
 
@@ -46,6 +46,7 @@ public class EnemyBoss extends Sprite {
     private ParticleEffect particleEffect;
 
     public EnemyBoss(PlayScreen screen, float posX, float posY) {
+        super(screen, posX, posY);
 //        super(screen.getAtlas().findRegion("robot4-walk8"));
         this.posX = posX;
         this.posY = posY;

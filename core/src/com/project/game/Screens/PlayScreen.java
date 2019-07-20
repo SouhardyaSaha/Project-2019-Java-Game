@@ -1,13 +1,13 @@
 package com.project.game.Screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -16,6 +16,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.game.Screens.MenuScreen;
 import com.project.game.Characters.MainPlayer;
 import com.project.game.CrisisGame;
 import com.project.game.Enemies.Dog;
@@ -31,9 +32,10 @@ public class PlayScreen implements Screen, InputProcessor {
 
     ///MainPlayer
     public MainPlayer mainPlayer;
-    public int level;
+    public static int level = 1;
     // backGround
     private Texture backgroundImage;
+
     ///Game Reference
     private CrisisGame game;
     private OrthographicCamera gameCam;
@@ -44,12 +46,16 @@ public class PlayScreen implements Screen, InputProcessor {
     private TiledMap map;
     private TmxMapLoader mapLoader;
     private OrthogonalTiledMapRenderer renderer;
+    private Box2dWorldCreator creator;
+
     ///Box 2d variables
     private World world;
     private Box2DDebugRenderer b2dr;
     ///Enemy
-    private MiddleEnemy roboGirl;
     private EnemyBoss boss;
+    private RoboGirl girl1, girl2;
+    private Dog dog1, dog2;
+    private MiddleEnemy middleEnemy1, middleEnemy2;
     ///Music
     private Music music;
 
@@ -70,7 +76,7 @@ public class PlayScreen implements Screen, InputProcessor {
 
         //Load map and setup map renderer
         mapLoader = new TmxMapLoader();
-        level = 2;
+//        level = 1;
         switch (level) {
             case 1:
                 backgroundImage = new Texture("BG apocalyptic 3.png");
@@ -99,15 +105,22 @@ public class PlayScreen implements Screen, InputProcessor {
         //allow the debug lines of box2d
         b2dr = new Box2DDebugRenderer();
 
-        new Box2dWorldCreator(this);
+        creator = new Box2dWorldCreator(this);
 
         switch (level) {
             case 1:
                 //creating main character
-                mainPlayer = new MainPlayer(this, 6500, 700);
+                mainPlayer = new MainPlayer(this, 1000, 700);
 
                 ///creating enimies
-                roboGirl = new MiddleEnemy(this, 6000, 700);
+                girl1 = new RoboGirl(this,1300, 672);
+                girl2 = new RoboGirl(this,4000, 672);
+
+                dog1 = new Dog(this, 5000, 672);
+                dog2 = new Dog(this, 6000, 672);
+
+                middleEnemy1 = new MiddleEnemy(this, 7500, 672);
+                middleEnemy2 = new MiddleEnemy(this, 12000, 672);
                 break;
             case 2:
                 //creating main character
@@ -133,6 +146,9 @@ public class PlayScreen implements Screen, InputProcessor {
 
     public void update(float dt) {
         ///ajaira
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
+            return;
+        }
         Gdx.input.setInputProcessor(this);
 
         world.step(1 / 60f, 6, 2);
@@ -142,9 +158,41 @@ public class PlayScreen implements Screen, InputProcessor {
                 ///main player update
                 mainPlayer.update(dt);
                 ///enemy update
-                roboGirl.update(dt);
+                girl1.update(dt);
+                girl2.update(dt);
+                dog2.update(dt);
+//                if (girl1.getX() < mainPlayer.getX() + 50f)
+//                    girl1.b2body.setActive(true);
+//                if (girl2.b2body.getPosition().x < mainPlayer.b2body.getPosition().x + 50f)
+//                    girl2.b2body.setActive(true);
+//
+//                if(dog1.b2body.getPosition().x < mainPlayer.b2body.getPosition().x + 1f)
+//                    dog1.b2body.setActive(true);
+//                if(dog2.b2body.getPosition().x < mainPlayer.b2body.getPosition().x + 1f)
+//                    dog2.b2body.setActive(true);
+//                if(middleEnemy1.b2body.getPosition().x < mainPlayer.b2body.getPosition().x + 1f)
+//                    middleEnemy1.b2body.setActive(true);
+//                if(middleEnemy2.b2body.getPosition().x < mainPlayer.b2body.getPosition().x + 1f)
+//                    middleEnemy2.b2body.setActive(true);
+                dog1.update(dt);
+
+                middleEnemy1.update(dt);
+                middleEnemy2.update(dt);
+                for (RoboGirl enemy : creator.getRobogirls()) {
+                    enemy.update(dt);
+                }
+
+                for (Dog enemy : creator.getDogs()) {
+                    enemy.update(dt);
+                }
+
+                for (MiddleEnemy enemy : creator.getMiddleEnemies()) {
+                    enemy.update(dt);
+                }
+
+                ///adjust camera according to map
                 playerPos = mainPlayer.b2body.getPosition().x;
-                if (playerPos > 1300 / CrisisGame.PPM && playerPos < 7100 / CrisisGame.PPM)
+                if (playerPos > 1300 / CrisisGame.PPM && playerPos < 15000 / CrisisGame.PPM)
                     gameCam.position.x = mainPlayer.b2body.getPosition().x;
                 break;
             case 2:
@@ -181,7 +229,7 @@ public class PlayScreen implements Screen, InputProcessor {
         renderer.render();
 
         //renderer box2DDebugelines
-        b2dr.render(world, gameCam.combined);
+//        b2dr.render(world, gameCam.combined);
 
         ///
         game.batch.setProjectionMatrix(gameCam.combined);
@@ -189,7 +237,26 @@ public class PlayScreen implements Screen, InputProcessor {
         switch (level) {
             case 1:
                 mainPlayer.draw(game.batch);
-                roboGirl.draw(game.batch);
+                girl1.draw(game.batch);
+                girl2.draw(game.batch);
+
+                dog1.draw(game.batch);
+                dog2.draw(game.batch);
+
+                middleEnemy1.draw(game.batch);
+                middleEnemy2.draw(game.batch);
+
+                for (RoboGirl enemy : creator.getRobogirls()) {
+                    enemy.draw(game.batch);
+                }
+
+                for (Dog enemy : creator.getDogs()) {
+                    enemy.draw(game.batch);
+                }
+
+                for (MiddleEnemy enemy : creator.getMiddleEnemies()) {
+                    enemy.draw(game.batch);
+                }
                 break;
             case 2:
                 boss.draw(game.batch);
@@ -200,7 +267,7 @@ public class PlayScreen implements Screen, InputProcessor {
 
         //to draw what HUD camera sees
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
-        hud.stage.draw();
+//        hud.stage.draw();
 
     }
 

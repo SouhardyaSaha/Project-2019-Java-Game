@@ -31,8 +31,6 @@ public class MiddleEnemy extends Enemy {
     private Animation playerRun;
     private Animation playerJump;
     private Animation playerShooting;
-    private Animation playerFalling;
-    //    public boolean shoot;
     private Animation playerDieing;
     private float stateTimer;
     private int bulletHitCount;
@@ -92,6 +90,8 @@ public class MiddleEnemy extends Enemy {
         ///creating bullets
         bullets = new ArrayList<EnemyBullet>();
 
+
+//        b2body.setActive(false);
         //for particles
         particleEffect = new ParticleEffect();
 //        particleEffect.load(Gdx.files.internal(""), Gdx.files.internal(""));
@@ -115,7 +115,7 @@ public class MiddleEnemy extends Enemy {
 
             ///For Bullets
             bulletTimeCount += dt;
-            if (bulletTimeCount > 0.5f) {
+            if (bulletTimeCount > 0.8f) {
                 fire = true;
                 bulletTimeCount = 0;
             } else fire = false;
